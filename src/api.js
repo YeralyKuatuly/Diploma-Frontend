@@ -16,7 +16,8 @@ export const getArtworks = async () => {
         const response = await axios.get(`${API_URL}artworks/`);
         return response.data;
     } catch (error) {
-        throw error.response?.data || error.message;
+        console.error("Error fetching artworks:", error);
+        return [];
     }
 };
 
@@ -46,4 +47,19 @@ export const logoutUser = () => {
 
 export const getAccessToken = () => {
     return localStorage.getItem("accessToken");
+};
+
+export const createArtwork = async (formData) => {
+    try {
+        const token = getAccessToken();
+        const response = await axios.post(`${API_URL}artworks/`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
 };
