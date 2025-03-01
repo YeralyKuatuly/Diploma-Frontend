@@ -10,13 +10,16 @@ const Gallery = () => {
     const [filter, setFilter] = useState("");
 
     useEffect(() => {
+        console.log("Gallery component mounted");
         const fetchArtworks = async () => {
             try {
+                console.log("Fetching artworks...");
                 const data = await getArtworks();
+                console.log("Artworks received:", data);
                 setArtworks(data);
             } catch (err) {
+                console.error("Error in fetchArtworks:", err);
                 setError("Failed to load artworks");
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -24,6 +27,9 @@ const Gallery = () => {
         
         fetchArtworks();
     }, []);
+
+    // Debug render to see if component is rendering at all
+    console.log("Gallery rendering, loading:", loading, "error:", error, "artworks:", artworks.length);
 
     const filteredArtworks = artworks.filter(art => 
         art.title.toLowerCase().includes(filter.toLowerCase()) ||
@@ -47,7 +53,7 @@ const Gallery = () => {
                 <div className="filter-container">
                     <input 
                         type="text" 
-                        placeholder="Filter artworks..." 
+                        placeholder="Search artworks..." 
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                         className="filter-input"

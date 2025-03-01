@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getArtists } from "../api";
+import "../styles/Artists.css";
 
 const Artists = () => {
     const [artists, setArtists] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filter, setFilter] = useState("");
 
     useEffect(() => {
         const fetchArtists = async () => {
@@ -22,33 +25,70 @@ const Artists = () => {
         fetchArtists();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    const filteredArtists = artists.filter(artist => 
+        artist.name.toLowerCase().includes(filter.toLowerCase()) ||
+        (artist.bio && artist.bio.toLowerCase().includes(filter.toLowerCase()))
+    );
+
+    if (loading) return (
+        <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading artists...</p>
+        </div>
+    );
+    
+    if (error) return <div className="error-message">{error}</div>;
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6">Our Artists</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {artists.map(artist => (
-                    <div key={artist.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <img 
-                            src={artist.profile_picture} 
-                            alt={artist.name} 
-                            className="w-full h-64 object-cover"
-                            onError={(e) => {
-                                e.target.src = '/placeholder-artist.jpg';
-                            }}
-                        />
-                        <div className="p-4">
-                            <h2 className="text-xl font-semibold mb-2">{artist.name}</h2>
-                            <p className="text-gray-600">{artist.bio}</p>
-                            <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                View Profile
-                            </button>
-                        </div>
-                    </div>
-                ))}
+        <div className="artists-container">
+            <div className="artists-header">
+                <h1>Our Artists</h1>
+                <div className="filter-container">
+                    <input 
+                        type="text" 
+                        placeholder="Search artists..." 
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        className="filter-input"
+                    />
+                </div>
             </div>
+
+            {filteredArtists.length === 0 ? (
+                <div className="no-results">
+                    <p>No artists found matching your search.</p>
+                </div>
+            ) : (
+                <div className="artists-grid">
+                    {filteredArtists.map(artist => (
+                        <div key={artist.id} className="artist-card">
+                            <div className="artist-image-container">
+                                <img 
+                                    src={artist.profile_picture || '/default-profile.jpg'} 
+                                    alt={artist.name} 
+                                    className="artist-image"
+                                    onError={(e) => {
+                                        e.target.src = '/default-profile.jpg';
+                                    }}
+                                />
+                            </div>
+                            <div className="artist-details">
+                                <h2 className="artist-name">{artist.name}</h2>
+                                <p className="artist-bio">
+                                    {artist.bio ? 
+                                        (artist.bio.length > 120 ? 
+                                            `${artist.bio.substring(0, 120)}...` : 
+                                            artist.bio) : 
+                                        "No bio available"}
+                                </p>
+                                <Link to={`/artist/${artist.id}`} className="view-profile-button">
+                                    View Profile
+                                </Link>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

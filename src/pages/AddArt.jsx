@@ -15,6 +15,7 @@ const AddArt = () => {
   const [error, setError] = useState("");
   const [preview, setPreview] = useState(null);
   const [userArtists, setUserArtists] = useState([]);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   // Check if user is logged in
@@ -90,39 +91,49 @@ const AddArt = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-
+    setError(null);
+    
     try {
-      // Validate form
-      if (!title || !description || !price || (!imageFile && !imageUrl)) {
-        throw new Error("Please fill all required fields");
+      if (!userArtists.length) {
+        throw new Error("Artist profile not found");
       }
-
-      if (!artistId) {
-        throw new Error("Please select an artist");
-      }
-
-      // Create FormData object
+      
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
       formData.append("price", price);
-      formData.append("artist_id", artistId);
-
+      formData.append("artist_id", userArtists[0].id);
+      
       if (imageFile) {
+        console.log("Appending image file:", imageFile.name);
         formData.append("image_file", imageFile);
       } else if (imageUrl) {
         formData.append("image_url", imageUrl);
+      } else {
+        throw new Error("Please provide an image file or URL");
       }
-
-      // Submit the form
-      await createArtwork(formData);
       
-      // Redirect to gallery on success
-      navigate("/");
+      const newArtwork = await createArtwork(formData);
+      console.log("New artwork created:", newArtwork);
+      
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setImageFile(null);
+      setImageUrl("");
+      setPreview(null);
+      
+      // Show success message
+      setSuccess(true);
+      
+      // Navigate to the artwork detail page after a delay
+      setTimeout(() => {
+        navigate(`/artwork/${newArtwork.id}`);
+      }, 2000);
     } catch (err) {
+      console.error("Error in handleSubmit:", err);
       setError(err.message || "Failed to create artwork");
-      console.error(err);
     } finally {
       setLoading(false);
     }
