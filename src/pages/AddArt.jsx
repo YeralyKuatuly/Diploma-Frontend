@@ -14,6 +14,7 @@ const AddArt = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [preview, setPreview] = useState(null);
+  const [userArtists, setUserArtists] = useState([]);
   const navigate = useNavigate();
 
   // Check if user is logged in
@@ -24,15 +25,36 @@ const AddArt = () => {
     }
   }, [navigate]);
 
-  // Fetch artists
+  // Fetch artists and identify user's artist profiles
   useEffect(() => {
     const fetchArtists = async () => {
       try {
         const data = await getArtists();
         setArtists(data);
-        // If user has only one artist profile, select it automatically
-        if (data.length === 1) {
-          setArtistId(data[0].id);
+        
+        // Get current user info from token
+        const token = getAccessToken();
+        if (token) {
+          try {
+            // Decode the JWT token to get user ID
+            const tokenParts = token.split('.');
+            const payload = JSON.parse(atob(tokenParts[1]));
+            const userId = payload.user_id;
+            
+            // Filter artists that belong to the current user
+            const currentUserArtists = data.filter(artist => 
+              artist.user && artist.user.id === userId
+            );
+            
+            setUserArtists(currentUserArtists);
+            
+            // If user has only one artist profile, select it automatically
+            if (currentUserArtists.length === 1) {
+              setArtistId(currentUserArtists[0].id);
+            }
+          } catch (err) {
+            console.error("Error decoding token:", err);
+          }
         }
       } catch (err) {
         setError("Failed to load artists");
@@ -150,19 +172,26 @@ const AddArt = () => {
 
         <div className="form-group">
           <label htmlFor="artist">Artist *</label>
-          <select
-            id="artist"
-            value={artistId}
-            onChange={(e) => setArtistId(e.target.value)}
-            required
-          >
-            <option value="">Select Artist</option>
-            {artists.map((artist) => (
-              <option key={artist.id} value={artist.id}>
-                {artist.name}
-              </option>
-            ))}
-          </select>
+          {userArtists.length === 1 ? (
+            <div className="selected-artist">
+              <p>You'll publish as: <strong>{userArtists[0].name}</strong></p>
+              <input type="hidden" value={userArtists[0].id} />
+            </div>
+          ) : (
+            <select
+              id="artist"
+              value={artistId}
+              onChange={(e) => setArtistId(e.target.value)}
+              required
+            >
+              <option value="">Select Artist</option>
+              {userArtists.map((artist) => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name} (Your profile)
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         <div className="form-group">
