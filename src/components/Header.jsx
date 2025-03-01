@@ -1,12 +1,28 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import '../styles/Header.css';
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { isLoggedIn, logout } = useAuth();
+    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleAuthClick = () => {
+        if (isLoggedIn) {
+            // Logout logic
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            logout(); // Update auth context
+            navigate('/');
+        } else {
+            // Navigate to login
+            navigate('/login');
+        }
     };
 
     return (
@@ -33,6 +49,13 @@ const Header = () => {
                 />
                 <button>🔍</button>
             </div>
+
+            <button 
+                className="auth-button"
+                onClick={handleAuthClick}
+            >
+                {isLoggedIn ? 'Logout' : 'Login'}
+            </button>
         </header>
     );
 };

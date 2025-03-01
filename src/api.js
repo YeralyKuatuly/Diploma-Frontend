@@ -21,24 +21,31 @@ export const getArtworks = async () => {
     }
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (username, password) => {
     try {
-        const response = await axios.post("http://localhost:8000/api/auth/login/", {
-            username: email,  // We send email as username
-            password: password,
+        const response = await axios.post(`${API_URL}auth/login/`, {
+            username,
+            password
         });
-
-        console.log("Login Response:", response.data); // Debugging output
-
-        localStorage.setItem("accessToken", response.data.access);
-        localStorage.setItem("refreshToken", response.data.refresh);
+        
+        // Store tokens in localStorage
+        localStorage.setItem('accessToken', response.data.access);
+        localStorage.setItem('refreshToken', response.data.refresh);
+        
         return response.data;
     } catch (error) {
-        console.error("Login Error:", error.response ? error.response.data : error.message);
-        throw error;
+        throw error.response?.data || error.message;
     }
 };
 
+export const registerUser = async (userData) => {
+    try {
+        const response = await axios.post(`${API_URL}auth/register/`, userData);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
 
 export const logoutUser = () => {
     localStorage.removeItem("accessToken");
@@ -52,12 +59,25 @@ export const getAccessToken = () => {
 export const createArtwork = async (formData) => {
     try {
         const token = getAccessToken();
+        if (!token) {
+            throw new Error("You must be logged in to create artwork");
+        }
+        
         const response = await axios.post(`${API_URL}artworks/`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             }
         });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+export const getArtworkById = async (id) => {
+    try {
+        const response = await axios.get(`${API_URL}artworks/${id}/`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
