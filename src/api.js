@@ -2,23 +2,6 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000/api";
 
-// Create an axios instance for authenticated requests
-const authAxios = axios.create({
-  baseURL: API_URL
-});
-
-// Add a request interceptor to include the token
-authAxios.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken();
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
 // Get token from localStorage
 export const getAccessToken = () => {
   return localStorage.getItem('accessToken');
@@ -28,6 +11,29 @@ export const getAccessToken = () => {
 export const getRefreshToken = () => {
   return localStorage.getItem('refreshToken');
 };
+
+// Create an axios instance for authenticated requests
+export const createAuthAxios = () => {
+  const instance = axios.create({
+    baseURL: API_URL
+  });
+
+  instance.interceptors.request.use(
+    (config) => {
+      const token = getAccessToken();
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  return instance;
+};
+
+// Create a singleton instance
+const authAxios = createAuthAxios();
 
 // Artworks
 export const getArtworks = async () => {
