@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getArtworks } from "../api";
+import { getArtworks, deleteArtwork, getUserProfile } from "../api";
 import "../styles/Gallery.css";
 
 const Gallery = () => {
@@ -8,25 +8,50 @@ const Gallery = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filter, setFilter] = useState("");
+    const [userProfile, setUserProfile] = useState(null);
 
     useEffect(() => {
         console.log("Gallery component mounted");
-        const fetchArtworks = async () => {
+        const fetchData = async () => {
             try {
                 console.log("Fetching artworks...");
-                const data = await getArtworks();
-                console.log("Artworks received:", data);
-                setArtworks(data);
+                // First fetch artworks
+                const artworksData = await getArtworks();
+                console.log("Artworks received:", artworksData);
+                setArtworks(artworksData);
+                
+                // Then try to fetch user profile
+                try {
+                    const profileData = await getUserProfile();
+                    console.log("User profile received:", profileData);
+                    setUserProfile(profileData);
+                } catch (profileError) {
+                    console.error("Error fetching user profile:", profileError);
+                    // Don't set error state for profile fetch failure
+                    // Just continue without user profile
+                }
             } catch (err) {
-                console.error("Error in fetchArtworks:", err);
+                console.error("Error in fetchData:", err);
                 setError("Failed to load artworks");
             } finally {
                 setLoading(false);
             }
         };
         
-        fetchArtworks();
+        fetchData();
     }, []);
+
+    const handleDelete = async (artworkId) => {
+        if (window.confirm("Are you sure you want to delete this artwork?")) {
+            try {
+                await deleteArtwork(artworkId);
+                setArtworks(artworks.filter(art => art.id !== artworkId));
+            } catch (err) {
+                console.error("Error deleting artwork:", err);
+                alert("Failed to delete artwork");
+            }
+        }
+    };
 
     // Debug render to see if component is rendering at all
     console.log("Gallery rendering, loading:", loading, "error:", error, "artworks:", artworks.length);
@@ -67,28 +92,33 @@ const Gallery = () => {
                 </div>
             ) : (
                 <div className="artwork-grid">
-                    {filteredArtworks.map(art => (
-                        <div key={art.id} className="artwork-card">
-                            <div className="artwork-image-container">
-                                <img 
-                                    src={art.image} 
-                                    alt={art.title} 
-                                    className="artwork-image"
-                                    onError={(e) => {
-                                        e.target.src = '/placeholder-image.jpg';
-                                    }}
-                                />
+                    {filteredArtworks.map(art => {
+                        const isOwner = userProfile?.artist?.id === art.artist.id;
+                        return (
+                            <div key={art.id} className="artwork-card">
+                                <div className="artwork-image-container">
+                                    <img 
+                                        src={art.image} 
+                                        alt={art.title} 
+                                        className="artwork-image"
+                                        onError={(e) => {
+                                            e.target.src = '/placeholder-image.jpg';
+                                        }}
+                                    />
+                                </div>
+                                <div className="artwork-details">
+                                    <h2 className="artwork-title">{art.title}</h2>
+                                    <p className="artwork-artist">by {art.artist.name}</p>
+                                    <p className="artwork-price">${art.price}</p>
+                                    <div className="artwork-actions">
+                                        <Link to={`/artwork/${art.id}`} className="view-details-button">
+                                            View Details
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="artwork-details">
-                                <h2 className="artwork-title">{art.title}</h2>
-                                <p className="artwork-artist">by {art.artist.name}</p>
-                                <p className="artwork-price">${art.price}</p>
-                                <Link to={`/artwork/${art.id}`} className="view-details-button">
-                                    View Details
-                                </Link>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

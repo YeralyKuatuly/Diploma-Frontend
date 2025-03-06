@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getArtworkById } from "../api";
+import { getArtworkById, deleteArtwork, getUserProfile } from "../api";
 import "../styles/ArtworkDetail.css";
 
 const ArtworkDetail = () => {
@@ -8,13 +8,24 @@ const ArtworkDetail = () => {
   const [artwork, setArtwork] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchArtwork = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getArtworkById(id);
-        setArtwork(data);
+        // Fetch artwork data
+        const artworkData = await getArtworkById(id);
+        setArtwork(artworkData);
+
+        // Try to fetch user profile
+        try {
+          const profileData = await getUserProfile();
+          setUserProfile(profileData);
+        } catch (profileError) {
+          console.error("Error fetching user profile:", profileError);
+          // Don't set error state for profile fetch failure
+        }
       } catch (err) {
         setError("Failed to load artwork details");
         console.error(err);
@@ -23,8 +34,20 @@ const ArtworkDetail = () => {
       }
     };
 
-    fetchArtwork();
+    fetchData();
   }, [id]);
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this artwork?")) {
+      try {
+        await deleteArtwork(id);
+        navigate("/");
+      } catch (err) {
+        console.error("Error deleting artwork:", err);
+        alert("Failed to delete artwork");
+      }
+    }
+  };
 
   if (loading) return (
     <div className="loading-container">
@@ -36,6 +59,8 @@ const ArtworkDetail = () => {
   if (error) return <div className="error-message">{error}</div>;
 
   if (!artwork) return <div className="error-message">Artwork not found</div>;
+
+  const isOwner = userProfile?.artist?.id === artwork.artist.id;
 
   return (
     <div className="artwork-detail-container">
@@ -79,12 +104,25 @@ const ArtworkDetail = () => {
           </div>
           
           <div className="artwork-detail-actions">
-            <button className="purchase-button">
-              Purchase Artwork
-            </button>
-            <button className="contact-button">
-              Contact Artist
-            </button>
+            {isOwner ? (
+              <>
+                <Link to={`/artwork/${id}/edit`} className="edit-button">
+                  Edit Artwork
+                </Link>
+                <button onClick={handleDelete} className="delete-button">
+                  Delete Artwork
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="purchase-button">
+                  Purchase Artwork
+                </button>
+                <button className="contact-button">
+                  Contact Artist
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

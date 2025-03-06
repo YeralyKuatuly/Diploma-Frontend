@@ -1,16 +1,35 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { getAccessToken } from '../api';
+import { getAccessToken, createAuthAxios } from '../api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Check login status on mount and when localStorage changes
   useEffect(() => {
-    const checkLoginStatus = () => {
+    const checkLoginStatus = async () => {
       const token = getAccessToken();
-      setIsLoggedIn(!!token);
+      if (!token) {
+        setIsLoggedIn(false);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Try to make an authenticated request to verify token
+        const authAxios = createAuthAxios();
+        await authAxios.get('/auth/profile/');
+        setIsLoggedIn(true);
+      } catch (error) {
+        // If token is invalid or expired, clear it and set logged out state
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
     };
     
     // Check on mount
@@ -29,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => setIsLoggedIn(false);
   
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

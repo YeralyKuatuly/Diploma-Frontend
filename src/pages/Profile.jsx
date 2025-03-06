@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserProfile, updateUserProfile, getAccessToken } from "../api";
+import { getUserProfile, updateUserProfile, getAccessToken, deleteAccount } from "../api";
 import "../styles/Profile.css";
 
 const Profile = () => {
@@ -14,13 +14,16 @@ const Profile = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const navigate = useNavigate();
 
   // Check if user is logged in
   useEffect(() => {
     const token = getAccessToken();
     if (!token) {
-      navigate("/login", { state: { from: "/profile" } });
+      setError("Please log in to view your profile");
+      setLoading(false);
       return;
     }
     
@@ -37,7 +40,11 @@ const Profile = () => {
       setArtistName(data.artist.name);
       setBio(data.artist.bio || "");
     } catch (err) {
-      setError("Failed to load profile");
+      if (err.response?.status === 401) {
+        setError("Your session has expired. Please log in again to view your profile.");
+      } else {
+        setError("Failed to load profile");
+      }
       console.error(err);
     } finally {
       setLoading(false);
@@ -132,6 +139,22 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+
+    setDeleteLoading(true);
+    try {
+      await deleteAccount();
+      // The deleteAccount function will handle the redirect
+    } catch (err) {
+      setError(err.message || "Failed to delete account");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   if (loading) return (
     <div className="loading-container">
       <div className="loading-spinner"></div>
@@ -139,7 +162,20 @@ const Profile = () => {
     </div>
   );
 
-  if (error && !profile) return <div className="error-message">{error}</div>;
+  if (error) return (
+    <div className="profile-container">
+      <div className="error-message">
+        <h2>Authentication Required</h2>
+        <p>{error}</p>
+        <button 
+          onClick={() => navigate("/login", { state: { from: "/profile" } })}
+          className="login-button"
+        >
+          Log In
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="profile-container">
@@ -196,7 +232,37 @@ const Profile = () => {
             >
               Add New Artwork
             </button>
+            <button 
+              onClick={() => setShowDeleteConfirm(true)}
+              className="delete-account-button"
+            >
+              Delete Account
+            </button>
           </div>
+
+          {showDeleteConfirm && (
+            <div className="delete-confirm-modal">
+              <div className="delete-confirm-content">
+                <h3>Delete Account</h3>
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <div className="delete-confirm-actions">
+                  <button 
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="cancel-button"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={handleDeleteAccount}
+                    disabled={deleteLoading}
+                    className="confirm-delete-button"
+                  >
+                    {deleteLoading ? "Deleting..." : "Delete Account"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="profile-edit-form">

@@ -12,6 +12,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css"; // Make sure to import the CSS
+import EditArtwork from "./pages/EditArtwork";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
     useEffect(() => {
@@ -34,7 +36,22 @@ function App() {
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/artwork/:id" element={<ArtworkDetail />} />
-                            <Route path="/profile" element={<Profile />} />
+                            <Route 
+                                path="/artwork/:id/edit" 
+                                element={
+                                    <PrivateRoute>
+                                        <EditArtwork />
+                                    </PrivateRoute>
+                                } 
+                            />
+                            <Route 
+                                path="/profile" 
+                                element={
+                                    <PrivateRoute>
+                                        <Profile />
+                                    </PrivateRoute>
+                                } 
+                            />
                         </Routes>
                     </main>
                     <Footer />

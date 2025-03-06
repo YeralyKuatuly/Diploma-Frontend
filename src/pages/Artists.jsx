@@ -25,10 +25,12 @@ const Artists = () => {
         fetchArtists();
     }, []);
 
-    const filteredArtists = artists.filter(artist => 
-        artist.name.toLowerCase().includes(filter.toLowerCase()) ||
-        (artist.bio && artist.bio.toLowerCase().includes(filter.toLowerCase()))
-    );
+    const filteredArtists = artists
+        .filter(artist => 
+            artist.name.toLowerCase().includes(filter.toLowerCase()) ||
+            (artist.bio && artist.bio.toLowerCase().includes(filter.toLowerCase()))
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));  // Sort alphabetically by name
 
     if (loading) return (
         <div className="loading-container">

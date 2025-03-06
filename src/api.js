@@ -29,6 +29,35 @@ export const createAuthAxios = () => {
     (error) => Promise.reject(error)
   );
 
+  // Add response interceptor to handle token expiration
+  instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      if (error.response) {
+        // Check if the error is due to token issues
+        const { status, data } = error.response;
+        
+        if (status === 401 && data.code) {
+          switch (data.code) {
+            case 'token_expired':
+            case 'token_blacklisted':
+            case 'authentication_failed':
+              // Clear tokens
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              
+              // Redirect to login page
+              window.location.href = '/login';
+              break;
+            default:
+              break;
+          }
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
   return instance;
 };
 
@@ -79,6 +108,37 @@ export const createArtwork = async (artworkData) => {
     if (error.response && error.response.data) {
       console.error("Server error details:", error.response.data);
       throw new Error(error.response.data.detail || "Failed to create artwork");
+    }
+    throw error;
+  }
+};
+
+export const updateArtwork = async (id, artworkData) => {
+  try {
+    console.log("Updating artwork with data:", artworkData);
+    const response = await authAxios.patch(`${API_URL}/artworks/${id}/`, artworkData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating artwork:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.detail || "Failed to update artwork");
+    }
+    throw error;
+  }
+};
+
+export const deleteArtwork = async (id) => {
+  try {
+    await authAxios.delete(`${API_URL}/artworks/${id}/`);
+    return true;
+  } catch (error) {
+    console.error("Error deleting artwork:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.detail || "Failed to delete artwork");
     }
     throw error;
   }
@@ -143,9 +203,19 @@ export const registerUser = async (userData) => {
   }
 };
 
-export const logoutUser = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
+export const logoutUser = async () => {
+  try {
+    const refreshToken = getRefreshToken();
+    if (refreshToken) {
+      await authAxios.post(`${API_URL}/auth/logout/`, {
+        refresh_token: refreshToken
+      });
+    }
+  } finally {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    window.location.href = '/login';
+  }
 };
 
 // User Profile
@@ -221,5 +291,21 @@ export const checkImageUrl = async (url) => {
   } catch (error) {
     console.error("Error checking image URL:", error);
     return false;
+  }
+};
+
+export const deleteAccount = async () => {
+  try {
+    await authAxios.delete(`${API_URL}/auth/delete/`);
+    // Clear tokens and redirect to login
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    window.location.href = '/login';
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.detail || "Failed to delete account");
+    }
+    throw error;
   }
 };
