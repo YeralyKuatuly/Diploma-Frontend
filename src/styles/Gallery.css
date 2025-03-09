@@ -1,9 +1,22 @@
+:root {
+  --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+  --metallic-secondary: #7091E6;  /* Soft Blue */
+  --metallic-accent: #8697C4;  /* Cool Slate */
+  --metallic-light: #ADBBDA;  /* Muted Silver */
+  --metallic-background: #EDE8F5;  /* Platinum Mist */
+  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+  --metallic-error: #E74C3C;  /* Error Red */
+}
+
+/* 🌟 Gallery Container */
 .gallery-container {
   max-width: 1200px;
   margin: 100px auto 40px;
   padding: 0 1.5rem;
 }
 
+/* 🌟 Gallery Header */
 .gallery-header {
   margin-bottom: 2rem;
   display: flex;
@@ -12,11 +25,12 @@
 }
 
 .gallery-header h1 {
-  color: #111827;
+  color: var(--metallic-primary);
   font-size: 2rem;
   font-weight: 700;
 }
 
+/* 🌟 Filter Box */
 .filter-container {
   width: 100%;
   max-width: 400px;
@@ -25,26 +39,31 @@
 .filter-input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--metallic-light);
   border-radius: 4px;
   font-size: 1rem;
+  background-color: var(--metallic-background);
   transition: border-color 0.3s;
+  color: var(--metallic-text-dark);
 }
 
 .filter-input:focus {
-  border-color: #4f46e5;
+  border-color: var(--metallic-primary);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 0 0 3px rgba(61, 82, 160, 0.3);
+  color: var(--metallic-text-dark);
 }
 
+/* 🌟 Artwork Grid */
 .artwork-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
 }
 
+/* 🌟 Artwork Card */
 .artwork-card {
-  background-color: white;
+  background-color: var(--metallic-background);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -59,6 +78,7 @@
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 🌟 Artwork Image */
 .artwork-image-container {
   height: 180px;
   overflow: hidden;
@@ -75,6 +95,7 @@
   transform: scale(1.05);
 }
 
+/* 🌟 Artwork Details */
 .artwork-details {
   padding: 1rem;
   flex-grow: 1;
@@ -86,8 +107,7 @@
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
-  color: #111827;
-  /* Limit to 2 lines */
+  color: var(--metallic-text-dark);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -97,17 +117,18 @@
 
 .artwork-artist {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--metallic-accent);
   margin-bottom: 0.5rem;
 }
 
 .artwork-price {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #4f46e5;
+  color: var(--metallic-primary);
   margin-bottom: 0.75rem;
 }
 
+/* 🌟 Buttons */
 .artwork-actions {
   display: flex;
   flex-direction: column;
@@ -130,39 +151,34 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: var(--metallic-text-light);
 }
 
 .view-details-button {
-  background-color: #4a90e2;
-  color: white;
-  border: none;
+  background-color: var(--metallic-secondary);
 }
 
 .edit-button {
-  background-color: #f39c12;
-  color: white;
-  border: none;
+  background-color: var(--metallic-accent);
 }
 
 .delete-button {
-  background-color: #e74c3c;
-  color: white;
-  border: none;
+  background-color: var(--metallic-error);
 }
 
 .view-details-button:hover {
-  background-color: #357abd;
+  background-color: var(--metallic-primary);
 }
 
 .edit-button:hover {
-  background-color: #d35400;
+  background-color: var(--metallic-primary);
 }
 
 .delete-button:hover {
-  background-color: #c0392b;
+  background-color: #C0392B;
 }
 
-/* Loading state */
+/* 🌟 Loading State */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -175,9 +191,9 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(79, 70, 229, 0.2);
+  border: 4px solid rgba(61, 82, 160, 0.2);
   border-radius: 50%;
-  border-top-color: #4f46e5;
+  border-top-color: var(--metallic-primary);
   animation: spin 1s ease-in-out infinite;
 }
 
@@ -187,10 +203,10 @@
   }
 }
 
-/* Error state */
+/* 🌟 Error State */
 .error-message {
   background-color: #fee2e2;
-  color: #b91c1c;
+  color: var(--metallic-error);
   padding: 1rem;
   border-radius: 4px;
   margin: 100px auto;
@@ -198,14 +214,14 @@
   text-align: center;
 }
 
-/* No results */
+/* 🌟 No Results */
 .no-results {
   text-align: center;
   padding: 3rem 0;
-  color: #6b7280;
+  color: var(--metallic-accent);
 }
 
-/* Responsive adjustments */
+/* 🌟 Responsive Adjustments */
 @media (min-width: 768px) {
   .gallery-header {
     flex-direction: row;
@@ -235,4 +251,4 @@
   .artwork-title {
     font-size: 0.9rem;
   }
-} 
+}

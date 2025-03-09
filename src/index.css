@@ -1,11 +1,25 @@
 :root {
+  --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+  --metallic-secondary: #7091E6;  /* Soft Blue */
+  --metallic-accent: #8697C4;  /* Cool Slate */
+  --metallic-light: #ADBBDA;  /* Muted Silver */
+  --metallic-background: #EDE8F5;  /* Platinum Mist */
+  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+
+  /* Dark Mode */
+  --metallic-dark-bg: #1A1A2E;  /* Midnight Navy */
+  --metallic-dark-card: #16213E;  /* Deep Space Blue */
+  --metallic-dark-text: #EDE8F5;  /* Light Platinum Mist */
+}
+
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--metallic-text-dark);
+  background-color: var(--metallic-background);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,15 +27,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 🌟 Links */
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--metallic-primary);
   text-decoration: inherit;
 }
+
 a:hover {
-  color: #535bf2;
+  color: var(--metallic-secondary);
 }
 
+/* 🌟 Body */
 body {
   margin: 0;
   display: flex;
@@ -30,11 +47,14 @@ body {
   min-height: 100vh;
 }
 
+/* 🌟 Headings */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: var(--metallic-primary);
 }
 
+/* 🌟 Buttons */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -42,27 +62,44 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--metallic-light);
+  color: var(--metallic-text-dark);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.3s ease-in-out;
 }
+
 button:hover {
-  border-color: #646cff;
+  background-color: var(--metallic-secondary);
+  color: var(--metallic-text-light);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* 🌙 Dark Mode */
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: var(--metallic-dark-text);
+    background-color: var(--metallic-dark-bg);
   }
+
+  a {
+    color: var(--metallic-light);
+  }
+
   a:hover {
-    color: #747bff;
+    color: var(--metallic-primary);
   }
+
   button {
-    background-color: #f9f9f9;
+    background-color: var(--metallic-dark-card);
+    color: var(--metallic-dark-text);
+  }
+
+  button:hover {
+    background-color: var(--metallic-primary);
+    color: var(--metallic-text-light);
   }
 }

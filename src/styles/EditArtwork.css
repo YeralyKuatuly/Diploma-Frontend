@@ -1,25 +1,40 @@
+:root {
+    --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+    --metallic-secondary: #7091E6;  /* Soft Blue */
+    --metallic-accent: #8697C4;  /* Cool Slate */
+    --metallic-light: #ADBBDA;  /* Muted Silver */
+    --metallic-background: #EDE8F5;  /* Platinum Mist */
+    --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+    --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+    --metallic-error: #E74C3C;  /* Error Red */
+}
+
+/* 🌟 Edit Artwork Container */
 .edit-artwork-container {
     max-width: 800px;
     margin: 100px auto 40px;
     padding: 2rem;
-    background-color: white;
+    background-color: var(--metallic-background);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* 🌟 Title */
 .edit-artwork-container h1 {
-    color: #111827;
+    color: var(--metallic-primary);
     font-size: 2rem;
     margin-bottom: 2rem;
     text-align: center;
 }
 
+/* 🌟 Form */
 .edit-artwork-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
+/* 🌟 Form Groups */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -28,22 +43,24 @@
 
 .form-group label {
     font-weight: 500;
-    color: #374151;
+    color: var(--metallic-text-dark);
 }
 
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group textarea {
     padding: 0.75rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--metallic-light);
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.3s;
+    background-color: var(--metallic-background);
+    color: var(--metallic-text-dark);
 }
 
 .form-group input[type="file"] {
     padding: 0.5rem;
-    border: 2px dashed #d1d5db;
+    border: 2px dashed var(--metallic-light);
     border-radius: 4px;
     cursor: pointer;
 }
@@ -55,11 +72,13 @@
 
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #4f46e5;
+    border-color: var(--metallic-primary);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(61, 82, 160, 0.3);
+    color: var(--metallic-primary);
 }
 
+/* 🌟 Image Preview */
 .image-preview {
     margin-top: 1rem;
     border-radius: 4px;
@@ -73,6 +92,7 @@
     object-fit: cover;
 }
 
+/* 🌟 Form Actions */
 .form-actions {
     display: flex;
     gap: 1rem;
@@ -87,28 +107,31 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
+    color: var(--metallic-text-light);
 }
 
+/* 🌟 Buttons */
 .submit-button {
-    background-color: #4f46e5;
-    color: white;
+    background-color: var(--metallic-secondary);
     border: none;
 }
 
 .submit-button:hover {
-    background-color: #4338ca;
+    background-color: var(--metallic-primary);
 }
 
 .cancel-button {
-    background-color: #f3f4f6;
-    color: #374151;
-    border: 1px solid #d1d5db;
+    background-color: var(--metallic-light);
+    color: var(--metallic-text-dark);
+    border: 1px solid var(--metallic-accent);
 }
 
 .cancel-button:hover {
-    background-color: #e5e7eb;
+    background-color: var(--metallic-accent);
+    color: var(--metallic-text-light);
 }
 
+/* 🌟 Loading State */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -121,9 +144,9 @@
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid rgba(79, 70, 229, 0.2);
+    border: 4px solid rgba(61, 82, 160, 0.2);
     border-radius: 50%;
-    border-top-color: #4f46e5;
+    border-top-color: var(--metallic-primary);
     animation: spin 1s ease-in-out infinite;
 }
 
@@ -133,9 +156,10 @@
     }
 }
 
+/* 🌟 Error Message */
 .error-message {
     background-color: #fee2e2;
-    color: #b91c1c;
+    color: var(--metallic-error);
     padding: 1rem;
     border-radius: 4px;
     margin: 100px auto;
@@ -143,6 +167,7 @@
     text-align: center;
 }
 
+/* 🌟 Responsive Styles */
 @media (max-width: 640px) {
     .edit-artwork-container {
         margin: 80px 1rem 40px;
@@ -157,4 +182,4 @@
     .cancel-button {
         width: 100%;
     }
-} 
+}

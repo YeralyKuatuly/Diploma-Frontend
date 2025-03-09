@@ -1,7 +1,17 @@
+:root {
+    --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+    --metallic-secondary: #7091E6;  /* Soft Blue */
+    --metallic-accent: #8697C4;  /* Cool Slate */
+    --metallic-light: #ADBBDA;  /* Muted Silver */
+    --metallic-background: #EDE8F5;  /* Platinum Mist */
+    --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+    --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+}
+
 /* 🌟 Footer Base */
 .footer {
-    background-color: #111827;
-    color: white;
+    background-color: var(--metallic-primary); /* Deep Royal Blue */
+    color: var(--metallic-text-light);
     padding: 3rem 2rem 1.5rem;
     width: 100%;
     text-align: center;
@@ -21,7 +31,7 @@
 
 /* 🌟 Section Titles */
 .footer-section h3 {
-    color: #818cf8;
+    color: var(--metallic-secondary); /* Soft Blue Highlight */
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -35,14 +45,14 @@
 }
 
 .footer-section nav a {
-    color: #e5e7eb;
+    color: var(--metallic-light);
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.3s ease-in-out, transform 0.2s;
 }
 
 .footer-section nav a:hover {
-    color: #818cf8;
+    color: var(--metallic-secondary);
     transform: translateX(5px); /* Slight movement effect */
 }
 
@@ -55,12 +65,12 @@
 
 .social-icon {
     font-size: 1.5rem;
-    color: #e5e7eb;
+    color: var(--metallic-light);
     transition: color 0.3s ease-in-out, transform 0.2s;
 }
 
 .social-icon:hover {
-    color: #818cf8;
+    color: var(--metallic-secondary);
     transform: scale(1.1);
 }
 
@@ -68,15 +78,15 @@
 .footer-bottom {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #374151;
+    border-top: 1px solid var(--metallic-accent);
     text-align: center;
     font-size: 0.9rem;
-    color: #9ca3af;
+    color: var(--metallic-text-light);
 }
 
 /* 🌟 Highlighted Text */
 .highlight {
-    color: #818cf8;
+    color: var(--metallic-secondary);
     font-weight: 600;
 }
 

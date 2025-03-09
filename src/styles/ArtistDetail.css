@@ -1,44 +1,60 @@
+:root {
+  --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+  --metallic-secondary: #7091E6;  /* Soft Blue */
+  --metallic-accent: #8697C4;  /* Cool Slate */
+  --metallic-light: #ADBBDA;  /* Muted Silver */
+  --metallic-background: #EDE8F5;  /* Platinum Mist */
+  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+}
+
+/* 🌟 Artist Detail Container */
 .artist-detail-container {
   max-width: 1200px;
   margin: 100px auto 40px;
   padding: 0 1.5rem;
 }
 
+/* 🌟 Header */
 .artist-detail-header {
   margin-bottom: 2rem;
 }
 
+/* 🌟 Back Button */
 .back-button {
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: #f3f4f6;
+  background-color: var(--metallic-light);
   border: none;
   border-radius: 4px;
-  color: #4b5563;
+  color: var(--metallic-text-dark);
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .back-button:hover {
-  background-color: #e5e7eb;
+  background-color: var(--metallic-accent);
 }
 
+/* 🌟 Artist Profile */
 .artist-profile {
-  background-color: white;
+  background-color: var(--metallic-background);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
+/* 🌟 Profile Header */
 .artist-profile-header {
   display: flex;
   padding: 2rem;
   gap: 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--metallic-light);
 }
 
+/* 🌟 Profile Image */
 .artist-profile-image-container {
   width: 150px;
   height: 150px;
@@ -53,40 +69,44 @@
   object-fit: cover;
 }
 
+/* 🌟 Artist Info */
 .artist-profile-info {
   flex: 1;
 }
 
 .artist-profile-info h1 {
   margin: 0 0 1rem;
-  color: #111827;
+  color: var(--metallic-primary);
   font-size: 1.75rem;
 }
 
 .artist-profile-bio {
-  color: #4b5563;
+  color: var(--metallic-text-dark);
   line-height: 1.6;
   margin: 0;
 }
 
+/* 🌟 Artist Artworks */
 .artist-artworks {
   padding: 2rem;
 }
 
 .artist-artworks h2 {
   margin: 0 0 1.5rem;
-  color: #111827;
+  color: var(--metallic-primary);
   font-size: 1.5rem;
 }
 
+/* 🌟 Artwork Grid */
 .artist-artworks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
 }
 
+/* 🌟 Artwork Card */
 .artwork-card {
-  background-color: white;
+  background-color: var(--metallic-background);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -101,6 +121,7 @@
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 🌟 Artwork Image */
 .artwork-image-container {
   height: 180px;
   overflow: hidden;
@@ -117,6 +138,7 @@
   transform: scale(1.05);
 }
 
+/* 🌟 Artwork Details */
 .artwork-details {
   padding: 1rem;
   flex-grow: 1;
@@ -128,20 +150,21 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 0.5rem;
-  color: #111827;
+  color: var(--metallic-text-dark);
 }
 
 .artwork-price {
   font-size: 1rem;
   font-weight: 700;
-  color: #4f46e5;
+  color: var(--metallic-primary);
   margin: 0 0 1rem;
 }
 
+/* 🌟 View Details Button */
 .view-details-button {
   display: inline-block;
-  background-color: #4f46e5;
-  color: white;
+  background-color: var(--metallic-secondary);
+  color: var(--metallic-text-light);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   text-decoration: none;
@@ -153,16 +176,17 @@
 }
 
 .view-details-button:hover {
-  background-color: #4338ca;
+  background-color: var(--metallic-primary);
 }
 
+/* 🌟 No Artworks */
 .no-artworks {
   text-align: center;
   padding: 2rem 0;
-  color: #6b7280;
+  color: var(--metallic-accent);
 }
 
-/* Responsive styles */
+/* 🌟 Responsive Styles */
 @media (max-width: 768px) {
   .artist-profile-header {
     flex-direction: column;
@@ -172,4 +196,4 @@
   .artist-profile-image-container {
     margin: 0 auto;
   }
-} 
+}

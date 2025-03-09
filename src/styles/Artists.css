@@ -1,9 +1,22 @@
+:root {
+  --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+  --metallic-secondary: #7091E6;  /* Soft Blue */
+  --metallic-accent: #8697C4;  /* Cool Slate */
+  --metallic-light: #ADBBDA;  /* Muted Silver */
+  --metallic-background: #EDE8F5;  /* Platinum Mist */
+  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+  --metallic-error: #E74C3C;  /* Error Red */
+}
+
+/* 🌟 Artists Container */
 .artists-container {
   max-width: 1200px;
   margin: 100px auto 40px;
   padding: 0 1.5rem;
 }
 
+/* 🌟 Artists Header */
 .artists-header {
   margin-bottom: 2rem;
   display: flex;
@@ -12,11 +25,12 @@
 }
 
 .artists-header h1 {
-  color: #111827;
+  color: var(--metallic-primary);
   font-size: 2rem;
   font-weight: 700;
 }
 
+/* 🌟 Filter Box */
 .filter-container {
   width: 100%;
   max-width: 400px;
@@ -25,26 +39,29 @@
 .filter-input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--metallic-light);
   border-radius: 4px;
   font-size: 1rem;
+  background-color: var(--metallic-background);
   transition: border-color 0.3s;
 }
 
 .filter-input:focus {
-  border-color: #4f46e5;
+  border-color: var(--metallic-primary);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 0 0 3px rgba(61, 82, 160, 0.3);
 }
 
+/* 🌟 Artists Grid */
 .artists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
 }
 
+/* 🌟 Artist Card */
 .artist-card {
-  background-color: white;
+  background-color: var(--metallic-background);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -59,6 +76,7 @@
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 🌟 Artist Image */
 .artist-image-container {
   height: 250px;
   overflow: hidden;
@@ -75,6 +93,7 @@
   transform: scale(1.05);
 }
 
+/* 🌟 Artist Details */
 .artist-details {
   padding: 1.5rem;
   flex-grow: 1;
@@ -86,21 +105,22 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #111827;
+  color: var(--metallic-primary);
 }
 
 .artist-bio {
   font-size: 0.9rem;
   line-height: 1.6;
-  color: #4b5563;
+  color: var(--metallic-text-dark);
   margin-bottom: 1.5rem;
   flex-grow: 1;
 }
 
+/* 🌟 View Profile Button */
 .view-profile-button {
   display: inline-block;
-  background-color: #4f46e5;
-  color: white;
+  background-color: var(--metallic-secondary);
+  color: var(--metallic-text-light);
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
@@ -112,10 +132,10 @@
 }
 
 .view-profile-button:hover {
-  background-color: #4338ca;
+  background-color: var(--metallic-primary);
 }
 
-/* Loading state */
+/* 🌟 Loading State */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -128,9 +148,9 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(79, 70, 229, 0.2);
+  border: 4px solid rgba(61, 82, 160, 0.2);
   border-radius: 50%;
-  border-top-color: #4f46e5;
+  border-top-color: var(--metallic-primary);
   animation: spin 1s ease-in-out infinite;
 }
 
@@ -140,10 +160,10 @@
   }
 }
 
-/* Error state */
+/* 🌟 Error State */
 .error-message {
   background-color: #fee2e2;
-  color: #b91c1c;
+  color: var(--metallic-error);
   padding: 1rem;
   border-radius: 4px;
   margin: 100px auto;
@@ -151,14 +171,14 @@
   text-align: center;
 }
 
-/* No results */
+/* 🌟 No Results */
 .no-results {
   text-align: center;
   padding: 3rem 0;
-  color: #6b7280;
+  color: var(--metallic-accent);
 }
 
-/* Responsive adjustments */
+/* 🌟 Responsive Adjustments */
 @media (min-width: 768px) {
   .artists-header {
     flex-direction: row;
@@ -180,4 +200,4 @@
   .artist-image-container {
     height: 200px;
   }
-} 
+}

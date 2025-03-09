@@ -1,36 +1,52 @@
+:root {
+  --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+  --metallic-secondary: #7091E6;  /* Soft Blue */
+  --metallic-accent: #8697C4;  /* Cool Slate */
+  --metallic-light: #ADBBDA;  /* Muted Silver */
+  --metallic-background: #EDE8F5;  /* Platinum Mist */
+  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+  --metallic-error: #E74C3C;  /* Error Red */
+}
+
+/* 🌟 Artwork Detail Container */
 .artwork-detail-container {
   max-width: 1200px;
   margin: 100px auto 40px;
   padding: 0 1.5rem;
 }
 
+/* 🌟 Header */
 .artwork-detail-header {
   margin-bottom: 2rem;
 }
 
+/* 🌟 Back Button */
 .back-button {
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: #f3f4f6;
+  background-color: var(--metallic-light);
   border: none;
   border-radius: 4px;
-  color: #4b5563;
+  color: var(--metallic-text-dark);
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .back-button:hover {
-  background-color: #e5e7eb;
+  background-color: var(--metallic-accent);
 }
 
+/* 🌟 Artwork Detail Content */
 .artwork-detail-content {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
 }
 
+/* 🌟 Artwork Image */
 .artwork-detail-image-container {
   border-radius: 8px;
   overflow: hidden;
@@ -43,6 +59,7 @@
   display: block;
 }
 
+/* 🌟 Artwork Info */
 .artwork-detail-info {
   display: flex;
   flex-direction: column;
@@ -52,45 +69,49 @@
 .artwork-detail-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--metallic-primary);
   margin: 0;
 }
 
 .artwork-detail-artist {
   font-size: 1.25rem;
-  color: #6b7280;
+  color: var(--metallic-accent);
 }
 
+/* 🌟 Artist Link */
 .artist-link {
-  color: #4f46e5;
+  color: var(--metallic-secondary);
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .artist-link:hover {
-  color: #4338ca;
+  color: var(--metallic-primary);
   text-decoration: underline;
 }
 
+/* 🌟 Artwork Price */
 .artwork-detail-price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #4f46e5;
+  color: var(--metallic-primary);
 }
 
+/* 🌟 Description */
 .artwork-detail-description h2 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--metallic-text-dark);
   margin-bottom: 0.75rem;
 }
 
 .artwork-detail-description p {
   font-size: 1rem;
   line-height: 1.6;
-  color: #4b5563;
+  color: var(--metallic-text-dark);
 }
 
+/* 🌟 Action Buttons */
 .artwork-detail-actions {
   display: flex;
   gap: 1rem;
@@ -108,49 +129,46 @@
   transition: all 0.3s;
   text-decoration: none;
   text-align: center;
+  color: var(--metallic-text-light);
 }
 
+/* 🌟 Buttons */
 .purchase-button {
-  background-color: #4f46e5;
-  color: white;
-  border: none;
+  background-color: var(--metallic-secondary);
 }
 
 .purchase-button:hover {
-  background-color: #4338ca;
+  background-color: var(--metallic-primary);
 }
 
 .contact-button {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background-color: var(--metallic-light);
+  color: var(--metallic-text-dark);
+  border: 1px solid var(--metallic-accent);
 }
 
 .contact-button:hover {
-  background-color: #e5e7eb;
+  background-color: var(--metallic-accent);
+  color: var(--metallic-text-light);
 }
 
 .edit-button {
-  background-color: #f39c12;
-  color: white;
-  border: none;
+  background-color: var(--metallic-accent);
 }
 
 .edit-button:hover {
-  background-color: #d35400;
+  background-color: var(--metallic-primary);
 }
 
 .delete-button {
-  background-color: #e74c3c;
-  color: white;
-  border: none;
+  background-color: var(--metallic-error);
 }
 
 .delete-button:hover {
-  background-color: #c0392b;
+  background-color: #C0392B;
 }
 
-/* Responsive styles */
+/* 🌟 Responsive Styles */
 @media (min-width: 768px) {
   .artwork-detail-content {
     grid-template-columns: 1fr 1fr;
@@ -159,4 +177,4 @@
   .artwork-detail-actions {
     flex-direction: row;
   }
-} 
+}

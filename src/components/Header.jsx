@@ -28,7 +28,7 @@ const Header = () => {
     return (
         <header className="header">
             <Link to="/" className="logo">
-                <span className="text-xl font-bold text-indigo-600">🎨 Art Gallery</span>
+                <span className="text-xl font-bold metallic-logo">🎨 Art Gallery</span>
             </Link>
             
             <button className="menu-button" onClick={toggleMenu}>
@@ -46,14 +46,6 @@ const Header = () => {
                 )}
                 <Link to="/subscribe" onClick={() => setIsMenuOpen(false)}>Subscribe</Link>
             </nav>
-
-            <div className="search-box">
-                <input 
-                    type="text" 
-                    placeholder="Search artwork..." 
-                />
-                <button>🔍</button>
-            </div>
 
             <button 
                 className="auth-button"

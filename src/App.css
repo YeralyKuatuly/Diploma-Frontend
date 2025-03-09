@@ -1,14 +1,33 @@
+:root {
+  --metallic-primary: #3D52A0;  /* Deep Royal Blue */
+  --metallic-secondary: #7091E6;  /* Soft Blue */
+  --metallic-accent: #8697C4;  /* Cool Slate */
+  --metallic-light: #ADBBDA;  /* Muted Silver */
+  --metallic-background: #EDE8F5;  /* Platinum Mist */
+  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+}
+
+/* 🌟 Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  background-color: var(--metallic-background);
+  color: var(--metallic-text-dark);
+  line-height: 1.5;
 }
 
+/* 🌟 Main App Container */
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -24,43 +43,59 @@ main {
   box-sizing: border-box;
 }
 
+/* 🌟 Cards */
 .card {
   padding: 2em;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--metallic-light);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
-@media (max-width: 768px) {
-  main {
-    margin-top: 120px; /* Adjust for mobile header which might be taller */
-  }
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Basic reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f9fafb;
-  color: #111827;
-  line-height: 1.5;
-}
-
+/* 🌟 Links */
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--metallic-primary);
+  transition: color 0.3s ease-in-out;
 }
 
+a:hover {
+  color: var(--metallic-secondary);
+}
+
+/* 🌟 Buttons */
 button {
   cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Utility classes */
+button.primary {
+  background-color: var(--metallic-primary);
+  color: var(--metallic-text-light);
+}
+
+button.primary:hover {
+  background-color: var(--metallic-secondary);
+}
+
+button.secondary {
+  background-color: var(--metallic-accent);
+  color: var(--metallic-text-light);
+}
+
+button.secondary:hover {
+  background-color: var(--metallic-primary);
+}
+
+/* 🌟 Utility Classes */
 .text-xl {
   font-size: 1.25rem;
 }
@@ -69,6 +104,9 @@ button {
   font-weight: 700;
 }
 
-.text-indigo-600 {
-  color: #4f46e5;
+/* 🌟 Responsive Adjustments */
+@media (max-width: 768px) {
+  main {
+    margin-top: 120px; /* Adjust for mobile header which might be taller */
+  }
 }
