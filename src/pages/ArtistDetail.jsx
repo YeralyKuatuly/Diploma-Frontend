@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getArtistById } from "../api";
+import { getArtistById, subscribeToArtist, unsubscribeFromArtist } from "../api";
+import { useAuth } from "../context/AuthContext";
 import "../styles/ArtistDetail.css";
 
 const ArtistDetail = () => {
@@ -8,7 +9,9 @@ const ArtistDetail = () => {
   const [artist, setArtist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSubscribing, setIsSubscribing] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -26,6 +29,28 @@ const ArtistDetail = () => {
 
     fetchArtist();
   }, [id]);
+
+  const handleSubscribe = async () => {
+    if (!isLoggedIn) {
+      navigate('/login', { state: { from: `/artist/${id}` } });
+      return;
+    }
+
+    try {
+      setIsSubscribing(true);
+      if (artist.is_subscribed) {
+        await unsubscribeFromArtist(id);
+        setArtist({ ...artist, is_subscribed: false });
+      } else {
+        await subscribeToArtist(id);
+        setArtist({ ...artist, is_subscribed: true });
+      }
+    } catch (error) {
+      console.error("Error managing subscription:", error);
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   if (loading) return (
     <div className="loading-container">
@@ -70,6 +95,15 @@ const ArtistDetail = () => {
               </span>
             </p>
             <p className="artist-profile-bio">{artist.bio || "No bio available"}</p>
+            
+            <button 
+              className={`subscribe-button ${artist.is_subscribed ? 'subscribed' : ''}`}
+              onClick={handleSubscribe}
+              disabled={isSubscribing}
+            >
+              {isSubscribing ? 'Processing...' : 
+                artist.is_subscribed ? 'Unsubscribe' : 'Subscribe for Updates'}
+            </button>
           </div>
         </div>
         

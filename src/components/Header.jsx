@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import '../styles/Header.css';
 import { useAuth } from "../context/AuthContext";
+import NotificationButton from "./NotificationButton";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,21 +39,25 @@ const Header = () => {
             <nav className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
                 <Link to="/artists" onClick={() => setIsMenuOpen(false)}>Artists</Link>
                 <Link to="/gallery" onClick={() => setIsMenuOpen(false)}>Gallery</Link>
+                <Link to="/slideshow" onClick={() => setIsMenuOpen(false)}>Art Slideshow</Link>
                 {isLoggedIn && (
                     <>
                         <Link to="/add-art" onClick={() => setIsMenuOpen(false)}>Add Art</Link>
                         <Link to="/profile" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
+                        <Link to="/subscriptions" onClick={() => setIsMenuOpen(false)}>My Subscriptions</Link>
                     </>
                 )}
-                <Link to="/subscribe" onClick={() => setIsMenuOpen(false)}>Subscribe</Link>
             </nav>
 
-            <button 
-                className="auth-button"
-                onClick={handleAuthClick}
-            >
-                {isLoggedIn ? 'Logout' : 'Login'}
-            </button>
+            <div className="header-actions">
+                {isLoggedIn && <NotificationButton />}
+                <button 
+                    className="auth-button"
+                    onClick={handleAuthClick}
+                >
+                    {isLoggedIn ? 'Logout' : 'Login'}
+                </button>
+            </div>
         </header>
     );
 };

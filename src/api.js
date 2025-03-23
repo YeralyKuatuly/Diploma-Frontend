@@ -309,3 +309,78 @@ export const deleteAccount = async () => {
     throw error;
   }
 };
+
+// Subscriptions
+export const subscribeToArtist = async (artistId) => {
+  try {
+    const response = await authAxios.post(`${API_URL}/artists/${artistId}/subscribe/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error subscribing to artist ${artistId}:`, error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.detail || "Failed to subscribe to artist");
+    }
+    throw error;
+  }
+};
+
+export const unsubscribeFromArtist = async (artistId) => {
+  try {
+    const response = await authAxios.post(`${API_URL}/artists/${artistId}/unsubscribe/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error unsubscribing from artist ${artistId}:`, error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.detail || "Failed to unsubscribe from artist");
+    }
+    throw error;
+  }
+};
+
+// Notifications
+export const getNotifications = async () => {
+  try {
+    const response = await authAxios.get(`${API_URL}/notifications/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    if (error.response && error.response.status !== 401) {  // Don't report 401 errors
+      throw new Error("Failed to fetch notifications");
+    }
+    return [];
+  }
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+  try {
+    const response = await authAxios.post(`${API_URL}/notifications/${notificationId}/mark_read/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error marking notification ${notificationId} as read:`, error);
+    throw error;
+  }
+};
+
+export const markAllNotificationsAsRead = async () => {
+  try {
+    const response = await authAxios.post(`${API_URL}/notifications/mark_all_read/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error marking all notifications as read:", error);
+    throw error;
+  }
+};
+
+// User subscriptions
+export const getUserSubscriptions = async () => {
+  try {
+    const response = await authAxios.get(`${API_URL}/auth/subscriptions/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user subscriptions:", error);
+    if (error.response && error.response.status !== 401) {  // Don't report 401 errors
+      throw new Error("Failed to fetch subscriptions");
+    }
+    return [];
+  }
+};

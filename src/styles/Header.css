@@ -171,3 +171,15 @@ metallic-logo {
         order: 5;
     }
 }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .header-actions {
+        gap: 10px;
+    }
+}

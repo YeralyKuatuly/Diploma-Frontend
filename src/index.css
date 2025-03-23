@@ -1,3 +1,6 @@
+/* Import Raleway font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+
 :root {
   --metallic-primary: #3D52A0;  /* Deep Royal Blue */
   --metallic-secondary: #7091E6;  /* Soft Blue */
@@ -14,9 +17,9 @@
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Raleway', sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
   color-scheme: light dark;
   color: var(--metallic-text-dark);
   background-color: var(--metallic-background);
@@ -29,7 +32,7 @@
 
 /* 🌟 Links */
 a {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--metallic-primary);
   text-decoration: inherit;
 }
@@ -52,6 +55,7 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
   color: var(--metallic-primary);
+  font-weight: 800;
 }
 
 /* 🌟 Buttons */
@@ -60,7 +64,7 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
   background-color: var(--metallic-light);
   color: var(--metallic-text-dark);

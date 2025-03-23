@@ -31,9 +31,9 @@
 
 /* 🌟 Section Titles */
 .footer-section h3 {
-    color: var(--metallic-secondary); /* Soft Blue Highlight */
+    color: var(--metallic-text-dark); /* Soft Blue Highlight */
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 800;
     margin-bottom: 1rem;
 }
 
