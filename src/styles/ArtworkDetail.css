@@ -14,6 +14,7 @@
   max-width: 1200px;
   margin: 100px auto 40px;
   padding: 0 1.5rem;
+  position: relative; /* Added for absolute positioning of back button */
 }
 
 /* 🌟 Header */
@@ -37,6 +38,18 @@
 
 .back-button:hover {
   background-color: var(--metallic-accent);
+}
+
+/* Specific styling for artwork back button */
+.artwork-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* 🌟 Artwork Detail Content */
@@ -95,6 +108,55 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--metallic-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Availability status */
+.availability-status {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.availability-status.available {
+  background-color: rgba(39, 174, 96, 0.15);
+  color: #27AE60;
+  border: 1px solid #27AE60;
+}
+
+.availability-status.unavailable {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: var(--metallic-error);
+  border: 1px solid var(--metallic-error);
+}
+
+/* Owner notes */
+.owner-availability-note {
+  font-size: 0.9rem;
+  color: var(--metallic-text-dark);
+  background-color: var(--metallic-background);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-left: 4px solid var(--metallic-accent);
+  margin-top: 15px;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* Disabled purchase button */
+.purchase-button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.purchase-button.disabled:hover {
+  background-color: #ccc;
 }
 
 /* 🌟 Description */
@@ -109,6 +171,32 @@
   font-size: 1rem;
   line-height: 1.6;
   color: var(--metallic-text-dark);
+}
+
+/* 🌟 Purchase Message */
+.purchase-message {
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin: 10px 0;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.purchase-message.success {
+  background-color: rgba(39, 174, 96, 0.15);
+  color: #27AE60;
+  border: 1px solid #27AE60;
+}
+
+.purchase-message.error {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: var(--metallic-error);
+  border: 1px solid var(--metallic-error);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* 🌟 Action Buttons */

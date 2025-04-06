@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getArtworks } from "../api";
 import "../styles/ArtSlideshow.css";
 
@@ -9,6 +9,7 @@ const ArtSlideshow = () => {
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const slideshowRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -26,12 +27,26 @@ const ArtSlideshow = () => {
   }, []);
 
   useEffect(() => {
+    // Hide both header and footer for a true fullscreen experience
     const footer = document.querySelector("footer");
+    const header = document.querySelector("header");
+    
     if (footer) footer.style.display = "none";
+    if (header) header.style.display = "none";
+    
+    // Ensure body doesn't scroll
+    document.body.style.overflow = "hidden";
+    
     return () => {
       if (footer) footer.style.display = "block";
+      if (header) header.style.display = "block";
+      document.body.style.overflow = "auto";
     };
   }, []);
+
+  const handleBack = () => {
+    navigate(-1); // Go back to previous page
+  };
 
   const snapToClosestSlide = () => {
     if (!slideshowRef.current) return;
@@ -74,6 +89,14 @@ const ArtSlideshow = () => {
 
   return (
     <div className="slideshow-fullscreen">
+      <button 
+        className="back-button" 
+        onClick={handleBack}
+        aria-label="Back to previous page"
+      >
+        ←
+      </button>
+      
       <div className="slideshow-outer-container">
         <div className="slideshow-header">
           <h1 className="slideshow-title">Artwork Collection</h1>
@@ -81,13 +104,23 @@ const ArtSlideshow = () => {
         </div>
 
         <div className="slideshow-nav">
-          <button className="nav-button prev" onClick={() => handleScroll("left")} disabled={currentIndex === 0}>
+          <button 
+            className="nav-button prev" 
+            onClick={() => handleScroll("left")} 
+            disabled={currentIndex === 0}
+            aria-label="Previous artwork"
+          >
             ←
           </button>
           <div className="slideshow-counter">
             {`${currentIndex + 1} / ${artworks.length}`}
           </div>
-          <button className="nav-button next" onClick={() => handleScroll("right")} disabled={currentIndex === artworks.length - 1}>
+          <button 
+            className="nav-button next" 
+            onClick={() => handleScroll("right")} 
+            disabled={currentIndex === artworks.length - 1}
+            aria-label="Next artwork"
+          >
             →
           </button>
         </div>

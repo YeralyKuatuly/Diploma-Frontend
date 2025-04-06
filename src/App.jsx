@@ -17,13 +17,28 @@ import NotificationProvider from "./context/NotificationContext";
 import "./App.css"; // Make sure to import the CSS
 import EditArtwork from "./pages/EditArtwork";
 import PrivateRoute from "./components/PrivateRoute";
+import Cart from './components/Cart';
+import Order from './components/Order';
+
+// Paths where header and footer should be hidden
+const hiddenComponentPaths = ['/slideshow'];
+
+// Header wrapper component that only renders on non-slideshow routes
+const HeaderWrapper = () => {
+    const location = useLocation();
+    
+    if (hiddenComponentPaths.includes(location.pathname)) {
+        return null;
+    }
+    
+    return <Header />;
+};
 
 // Footer wrapper component that only renders on non-slideshow routes
 const FooterWrapper = () => {
     const location = useLocation();
-    const hideFooterPaths = ['/slideshow'];
     
-    if (hideFooterPaths.includes(location.pathname)) {
+    if (hiddenComponentPaths.includes(location.pathname)) {
         return null;
     }
     
@@ -34,7 +49,7 @@ const FooterWrapper = () => {
 const AppContent = () => {
     return (
         <div className="app-container">
-            <Header />
+            <HeaderWrapper />
             <main>
                 <Routes>
                     <Route path="/" element={<Gallery />} />
@@ -70,6 +85,8 @@ const AppContent = () => {
                             </PrivateRoute>
                         } 
                     />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/orders/:orderId" element={<Order />} />
                 </Routes>
             </main>
             <FooterWrapper />

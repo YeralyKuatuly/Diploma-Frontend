@@ -30,6 +30,16 @@
     text-decoration: none;
     transition: transform 0.3s ease-in-out;
     color: var(--metallic-text-dark);
+    margin-right: auto; /* Push everything else to the right */
+    padding-left: 0; /* Ensure no padding on the left */
+    position: relative; /* For absolute positioning if needed */
+    min-width: 120px; /* Ensure it has some minimum width */
+    font-weight: bold; /* Make the text bold */
+    text-transform: none; /* Prevent uppercase transformation */
+}
+
+.logo:hover {
+    transform: scale(1.05); /* Slight grow effect on hover */
 }
 
 metallic-logo {
@@ -59,17 +69,22 @@ metallic-logo {
     gap: 1.5rem;
     font-size: 1rem;
     font-weight: 500;
+    align-items: center;
+    z-index: 1001; /* Ensure links are above other elements */
 }
 
-.nav-links a {
+.nav-links a, .nav-links button {
     text-decoration: none;
-    color: var(--metallic-text-light); /* White for contrast */
+    color: var(--metallic-text-light) !important; /* White for contrast, !important to override MUI styles */
     transition: color 0.3s ease-in-out;
     padding: 0.5rem;
+    font-weight: 500;
+    opacity: 1 !important; /* Ensure full opacity */
 }
 
-.nav-links a:hover {
-    color: var(--metallic-secondary); /* Soft Blue */
+.nav-links a:hover, .nav-links button:hover {
+    color: var(--metallic-secondary) !important; /* Soft Blue, !important to override MUI styles */
+    text-decoration: underline;
 }
 
 .search-box {

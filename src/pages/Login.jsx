@@ -26,14 +26,19 @@ const Login = () => {
         throw new Error("Please enter both username and password");
       }
 
-      await loginUser(username, password);
-      login(); // Update auth context
+      console.log("Logging in with:", { username });
+      const response = await loginUser(username, password);
+      console.log("Login successful, tokens received");
       
+      // Update auth context
+      login();
+      
+      console.log("Redirecting to:", from);
       // Redirect to the page they were trying to access, or home
       navigate(from);
     } catch (err) {
+      console.error("Login error:", err);
       setError(err.message || "Login failed. Please check your credentials.");
-      console.error(err);
     } finally {
       setLoading(false);
     }

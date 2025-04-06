@@ -21,11 +21,38 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: var(--metallic-background);
+  background-color: var(--bg-color);
   z-index: 10;
   overflow: hidden;
-  padding-top: 60px; /* Space for header */
+  padding-top: 0; /* Remove space for header */
   box-sizing: border-box;
+}
+
+/* Back button styles */
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: linear-gradient(135deg, var(--metallic-secondary, #666), var(--metallic-primary, #333));
+  color: var(--text-color);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, var(--metallic-secondary-dark, #555), var(--metallic-primary-dark, #222));
 }
 
 /* Outer container for the entire slideshow/hero area */

@@ -13,6 +13,7 @@ const EditArtwork = () => {
         title: '',
         description: '',
         price: '',
+        is_available: true,
         image: null,
         imagePreview: null
     });
@@ -26,6 +27,7 @@ const EditArtwork = () => {
                     title: data.title,
                     description: data.description,
                     price: data.price,
+                    is_available: data.is_available,
                     image: null,
                     imagePreview: data.image
                 });
@@ -41,10 +43,10 @@ const EditArtwork = () => {
     }, [id]);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
@@ -66,10 +68,12 @@ const EditArtwork = () => {
             formDataToSend.append('title', formData.title);
             formDataToSend.append('description', formData.description);
             formDataToSend.append('price', formData.price);
+            formDataToSend.append('is_available', formData.is_available);
             if (formData.image) {
                 formDataToSend.append('image', formData.image);
             }
 
+            console.log('Submitting artwork with is_available:', formData.is_available);
             await updateArtwork(id, formDataToSend);
             navigate(`/artwork/${id}`);
         } catch (err) {
@@ -127,6 +131,24 @@ const EditArtwork = () => {
                         min="0"
                         step="0.01"
                     />
+                </div>
+                
+                <div className="form-group checkbox-group">
+                    <label htmlFor="is_available" className="checkbox-label">
+                        <input
+                            type="checkbox"
+                            id="is_available"
+                            name="is_available"
+                            checked={formData.is_available}
+                            onChange={handleInputChange}
+                        />
+                        Available for Purchase
+                    </label>
+                    <div className="availability-hint">
+                        {formData.is_available 
+                            ? "This artwork can be added to cart and purchased." 
+                            : "This artwork is not available for purchase."}
+                    </div>
                 </div>
 
                 <div className="form-group">

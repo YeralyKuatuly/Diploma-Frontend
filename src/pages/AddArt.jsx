@@ -16,6 +16,7 @@ const AddArt = () => {
   const [preview, setPreview] = useState(null);
   const [userArtists, setUserArtists] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(true);
   const navigate = useNavigate();
 
   // Check if user is logged in
@@ -103,6 +104,7 @@ const AddArt = () => {
       formData.append("description", description);
       formData.append("price", price);
       formData.append("artist_id", userArtists[0].id);
+      formData.append("is_available", isAvailable);
       
       if (imageFile) {
         console.log("Appending image file:", imageFile.name);
@@ -123,6 +125,7 @@ const AddArt = () => {
       setImageFile(null);
       setImageUrl("");
       setPreview(null);
+      setIsAvailable(true);
       
       // Show success message
       setSuccess(true);
@@ -179,6 +182,23 @@ const AddArt = () => {
             step="0.01"
             required
           />
+        </div>
+
+        <div className="form-group checkbox-group">
+          <label htmlFor="is_available" className="checkbox-label">
+            <input
+              type="checkbox"
+              id="is_available"
+              checked={isAvailable}
+              onChange={(e) => setIsAvailable(e.target.checked)}
+            />
+            Available for Purchase
+          </label>
+          <div className="availability-hint">
+            {isAvailable 
+              ? "This artwork will be available for purchase immediately." 
+              : "This artwork will be saved but not available for purchase."}
+          </div>
         </div>
 
         <div className="form-group">

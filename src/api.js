@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api";
+// Define API URL with correct path prefix
+export const API_URL = "http://localhost:8000/api";
 
 // Get token from localStorage
 export const getAccessToken = () => {
@@ -15,7 +16,7 @@ export const getRefreshToken = () => {
 // Create an axios instance for authenticated requests
 export const createAuthAxios = () => {
   const instance = axios.create({
-    baseURL: API_URL
+    baseURL: 'http://localhost:8000'
   });
 
   instance.interceptors.request.use(
@@ -24,6 +25,10 @@ export const createAuthAxios = () => {
       if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
       }
+      
+      // Debug logging
+      console.log(`Auth request to: ${config.url}`);
+      
       return config;
     },
     (error) => Promise.reject(error)
@@ -382,5 +387,138 @@ export const getUserSubscriptions = async () => {
       throw new Error("Failed to fetch subscriptions");
     }
     return [];
+  }
+};
+
+// Cart functions
+export const getCart = async () => {
+  try {
+    console.log("Fetching cart");
+    const response = await authAxios.get(`${API_URL}/cart/me/`);
+    console.log("Cart response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const addToCart = async (artworkId, quantity = 1) => {
+  try {
+    console.log(`Adding artwork ${artworkId} to cart, quantity: ${quantity}`);
+    // Log the request payload for debugging
+    const payload = {
+      artwork_id: artworkId,
+      quantity: quantity
+    };
+    console.log("Request payload:", payload);
+    console.log("Request URL:", `${API_URL}/cart/add_item/`);
+    console.log("Authorization token exists:", !!getAccessToken());
+    
+    const response = await authAxios.post(`${API_URL}/cart/add_item/`, payload);
+    console.log("Add to cart response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+      console.error("Error details:", error.response.data.detail || "No detail provided");
+    } else if (error.request) {
+      console.error("No response received from server");
+    } else {
+      console.error("Error message:", error.message);
+    }
+    throw error;
+  }
+};
+
+export const removeFromCart = async (artworkId, quantity = 1) => {
+  try {
+    console.log(`Removing artwork ${artworkId} from cart, quantity: ${quantity}`);
+    const response = await authAxios.post(`${API_URL}/cart/remove_item/`, {
+      artwork_id: artworkId,
+      quantity: quantity
+    });
+    console.log("Remove from cart response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error removing from cart:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+// Order functions
+export const getOrders = async () => {
+  try {
+    console.log("Fetching orders");
+    const response = await authAxios.get(`${API_URL}/orders/`);
+    console.log("Orders response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const getOrderById = async (orderId) => {
+  try {
+    console.log(`Fetching order ${orderId}`);
+    const response = await authAxios.get(`${API_URL}/orders/${orderId}/`);
+    console.log("Order response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching order ${orderId}:`, error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const createOrder = async (shippingAddress) => {
+  try {
+    console.log("Creating order with shipping address:", shippingAddress);
+    const response = await authAxios.post(`${API_URL}/orders/`, {
+      shipping_address: shippingAddress
+    });
+    console.log("Create order response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating order:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const cancelOrder = async (orderId) => {
+  try {
+    console.log(`Cancelling order ${orderId}`);
+    const response = await authAxios.post(`${API_URL}/orders/${orderId}/cancel/`);
+    console.log("Cancel order response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error cancelling order ${orderId}:`, error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
   }
 };
