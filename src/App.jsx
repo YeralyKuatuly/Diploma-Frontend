@@ -19,6 +19,7 @@ import EditArtwork from "./pages/EditArtwork";
 import PrivateRoute from "./components/PrivateRoute";
 import Cart from './components/Cart';
 import Order from './components/Order';
+import './styles/base.css';
 
 // Paths where header and footer should be hidden
 const hiddenComponentPaths = ['/slideshow'];

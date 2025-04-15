@@ -88,7 +88,13 @@ const ArtworkDetail = () => {
           setPurchaseMessage("Please log in to add items to your cart.");
           setTimeout(() => navigate('/login'), 2000);
         } else if (err.response.data && err.response.data.detail) {
-          setPurchaseMessage(`Failed to add to cart: ${err.response.data.detail}`);
+          // Handle the "already in cart" message
+          if (err.response.data.detail === "This artwork is already in your cart") {
+            setPurchaseMessage("This artwork is already in your cart");
+            setTimeout(() => navigate('/cart'), 1500);
+          } else {
+            setPurchaseMessage(`Failed to add to cart: ${err.response.data.detail}`);
+          }
         } else {
           setPurchaseMessage(`Failed to add to cart (${err.response.status}). Please try again.`);
         }

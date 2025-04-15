@@ -1,86 +1,88 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { getAccessToken, createAuthAxios, API_URL } from '../api';
+import { createAuthAxios, API_URL } from '../api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
-  // Check login status on mount and when localStorage changes
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      console.log('Checking login status...');
-      const token = getAccessToken();
-      console.log('Token exists:', !!token);
-      
+  const [user, setUser] = useState(null);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
       if (!token) {
         setIsLoggedIn(false);
         setIsLoading(false);
         return;
       }
 
-      try {
-        // Try to make an authenticated request to verify token
-        const authAxios = createAuthAxios();
-        await authAxios.get(`${API_URL}/auth/profile/`);
-        console.log('Token is valid, user is logged in');
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error('Token validation failed:', error);
-        if (error.response) {
-          console.error('Error response:', error.response.status, error.response.data);
-        }
-        // If token is invalid or expired, clear it and set logged out state
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        setIsLoggedIn(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    // Check on mount
+      const authAxios = createAuthAxios();
+      const response = await authAxios.get('/auth/profile/');
+      setUser(response.data);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('Error checking login status:', error);
+      setIsLoggedIn(false);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     checkLoginStatus();
-    
-    // Listen for storage events (when token is added/removed in another tab)
+
     const handleStorageChange = (e) => {
       if (e.key === 'accessToken') {
         checkLoginStatus();
       }
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
-  
-  // Function to update login state
-  const login = () => {
-    console.log('Setting logged in state to true');
-    setIsLoggedIn(true);
+
+  const login = async (username, password) => {
+    try {
+      console.log("Login API URL used in AuthContext:", `${API_URL}/auth/login/`);
+      const authAxios = createAuthAxios();
+      const response = await authAxios.post('/auth/login/', { username, password });
+      const { access, refresh } = response.data;
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+      await checkLoginStatus();
+      return response.data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   };
-  
-  const logout = () => {
-    console.log('Setting logged in state to false');
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    setIsLoggedIn(false);
+
+  const logout = async () => {
+    try {
+      const authAxios = createAuthAxios();
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await authAxios.post('/auth/logout/', { refresh: refreshToken });
+      }
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      setIsLoggedIn(false);
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
-  
-  // Add debug output to see current state
-  console.log('AuthContext state:', { isLoggedIn, isLoading });
-  
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to use the auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

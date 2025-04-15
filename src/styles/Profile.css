@@ -13,11 +13,135 @@
 /* 🌟 Profile Container */
 .profile-container {
   max-width: 800px;
-  margin: 100px auto 40px;
-  padding: 2rem;
-  background-color: var(--metallic-background);
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container h2 {
+  margin-bottom: 24px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.save-button {
+  padding: 12px 24px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background-color: #3a80d2;
+}
+
+.save-button:disabled {
+  background-color: #a0c0e8;
+  cursor: not-allowed;
+}
+
+.danger-zone {
+  margin-top: 60px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.danger-zone h3 {
+  color: #d32f2f;
+  margin-bottom: 16px;
+}
+
+.delete-account-button {
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-account-button:hover {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-account-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: #666;
 }
 
 /* 🌟 Profile Title */
@@ -118,8 +242,7 @@
 }
 
 .edit-button,
-.add-art-button,
-.delete-account-button {
+.add-art-button {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 4px;
@@ -144,14 +267,6 @@
 
 .add-art-button:hover {
   background-color: #1E8449;
-}
-
-.delete-account-button {
-  background-color: var(--metallic-error);
-}
-
-.delete-account-button:hover {
-  background-color: #C0392B;
 }
 
 /* 🌟 Delete Confirmation Modal */
@@ -198,20 +313,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.form-group label {
-  font-weight: 600;
-  color: var(--metallic-text-dark);
-}
-
-.form-group input,
-.form-group textarea {
-  padding: 0.75rem;
-  border: 1px solid var(--metallic-light);
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
 }
 
 .form-group input:focus,
@@ -261,22 +362,6 @@
 }
 
 /* 🌟 Form Actions */
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-
-.cancel-button,
-.save-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
 .cancel-button {
   background-color: var(--metallic-light);
   color: var(--metallic-text-dark);
@@ -284,15 +369,6 @@
 
 .cancel-button:hover {
   background-color: var(--metallic-accent);
-}
-
-.save-button {
-  background-color: var(--metallic-primary);
-  color: var(--metallic-text-light);
-}
-
-.save-button:hover {
-  background-color: var(--metallic-secondary);
 }
 
 /* 🌟 Responsive Styles */

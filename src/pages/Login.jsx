@@ -1,59 +1,45 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../api";
 import { useAuth } from "../context/AuthContext";
-import "../styles/Auth.css";
+import "../styles/Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
-  
-  // Get the page user was trying to access before being redirected to login
-  const from = location.state?.from || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setIsLoading(true);
 
     try {
-      if (!username || !password) {
-        throw new Error("Please enter both username and password");
-      }
-
-      console.log("Logging in with:", { username });
-      const response = await loginUser(username, password);
-      console.log("Login successful, tokens received");
-      
-      // Update auth context
-      login();
-      
-      console.log("Redirecting to:", from);
-      // Redirect to the page they were trying to access, or home
-      navigate(from);
+      // Call the login function from AuthContext
+      await login(username, password);
+      navigate("/");
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Login failed. Please check your credentials.");
+      setError(
+        err.response?.data?.detail || 
+        "Failed to login. Please check your credentials."
+      );
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Login</h1>
-        
-        {error && <div className="auth-error">{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="auth-form">
+    <div className="login-container">
+      <div className="login-form-container">
+        <h2>Login</h2>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="username">Username or Email</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
@@ -62,7 +48,6 @@ const Login = () => {
               required
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -73,20 +58,12 @@ const Login = () => {
               required
             />
           </div>
-          
-          <button 
-            type="submit" 
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
+          <button type="submit" disabled={isLoading} className="login-button">
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
-        
-        <div className="auth-links">
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
+        <div className="register-link">
+          Don't have an account? <Link to="/register">Register</Link>
         </div>
       </div>
     </div>

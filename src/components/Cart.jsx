@@ -56,7 +56,7 @@ const Cart = () => {
 
   const handleRemoveItem = async (artworkId) => {
     try {
-      await removeFromCart(artworkId, 1);
+      await removeFromCart(artworkId);
       fetchCart();
     } catch (err) {
       console.error('Error removing item:', err);
@@ -136,20 +136,10 @@ const Cart = () => {
                       ${item.total_price}
                     </Typography>
                     <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
-                      <IconButton
-                        onClick={() => handleQuantityChange(item.artwork.id, item.quantity - 1)}
-                      >
-                        <RemoveIcon />
-                      </IconButton>
-                      <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
-                      <IconButton
-                        onClick={() => handleQuantityChange(item.artwork.id, item.quantity + 1)}
-                      >
-                        <AddIcon />
-                      </IconButton>
+                      <Typography sx={{ mr: 2 }}>Quantity: 1</Typography>
                       <IconButton
                         onClick={() => handleRemoveItem(item.artwork.id)}
-                        sx={{ ml: 2 }}
+                        aria-label="Remove from cart"
                       >
                         <DeleteIcon />
                       </IconButton>
