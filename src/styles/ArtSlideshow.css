@@ -5,6 +5,7 @@
   padding: 0;
 }
 
+/* Slideshow variables */
 :root {
   /* Typically that site uses #141414 as background and #fff as text, plus a custom sans font. */
   --bg-color: #141414;
