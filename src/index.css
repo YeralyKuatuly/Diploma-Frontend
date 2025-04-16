@@ -28,8 +28,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Reset margin and padding for all elements */
-* {
+/* Remove ALL margins and padding to prevent spacing issues */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -39,6 +39,9 @@ html, body {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
+  /* Remove margin and padding explicitly */
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* 🌟 Links */
@@ -54,24 +57,9 @@ a:hover {
 
 /* 🌟 Body */
 body {
-  margin: 0;
-  padding: 0;
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-html {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-  margin: 0;
-  padding: 0;
 }
 
 #root {
@@ -79,8 +67,6 @@ html {
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 /* 🌟 Headings */

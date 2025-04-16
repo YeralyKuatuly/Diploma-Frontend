@@ -28,6 +28,9 @@ import '../styles/Header.css'; // Import CSS file
 import { useAuth } from '../context/AuthContext';
 import { logoutUser } from '../api';
 
+// Add the default profile picture URL at the top of the file
+const DEFAULT_PROFILE_PICTURE = "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
+
 const Header = () => {
   const { isLoggedIn, logout } = useAuth();
   const [user, setUser] = useState(null);
@@ -313,7 +316,11 @@ const Header = () => {
                     sx={{ width: 32, height: 32 }}
                   />
                 ) : (
-                  <AccountCircleIcon />
+                  <Avatar
+                    src={DEFAULT_PROFILE_PICTURE}
+                    alt={user?.username || 'User'}
+                    sx={{ width: 32, height: 32 }}
+                  />
                 )}
               </IconButton>
             )}
