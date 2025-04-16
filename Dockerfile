@@ -10,6 +10,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 RUN npm install jwt-decode
+RUN npm install lightningcss
 
 # Set default API URL with ARG - can be overridden at build time
 ARG VITE_API_URL=http://localhost:8000/api
