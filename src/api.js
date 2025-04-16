@@ -5,8 +5,6 @@ import { jwtDecode } from 'jwt-decode';
 const DEFAULT_API_URL = "http://localhost:8000/api";
 export const API_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
 
-console.log("API module loaded with URL:", API_URL);
-
 // Create direct axios instance with no authentication
 const plainAxios = axios.create({
   baseURL: API_URL,
@@ -36,10 +34,6 @@ export const createAuthAxios = () => {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-      
-      // Debug logging
-      console.log(`Auth request to: ${config.baseURL}${config.url}`);
-      
       return config;
     },
     (error) => Promise.reject(error)
@@ -94,9 +88,6 @@ const authAxios = createAuthAxios();
 export const registerUser = async (userData) => {
   try {
     const fullUrl = `${API_URL}/auth/register/`;
-    console.log("VITE_API_URL value:", import.meta.env.VITE_API_URL || 'Not set');
-    console.log("Using API_URL:", API_URL);
-    console.log("Full registration URL:", fullUrl);
     
     // Use direct axios without going through instance to troubleshoot
     const response = await axios({
@@ -107,19 +98,8 @@ export const registerUser = async (userData) => {
       withCredentials: true
     });
     
-    console.log("Registration successful:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Registration error:', error);
-    if (error.response) {
-      console.error('Response status:', error.response.status);
-      console.error('Response data:', error.response.data);
-      console.error('Response headers:', error.response.headers);
-    } else if (error.request) {
-      console.error('No response received. Request:', error.request);
-    } else {
-      console.error('Error message:', error.message);
-    }
     throw error;
   }
 };
@@ -127,9 +107,8 @@ export const registerUser = async (userData) => {
 export const loginUser = async (username, password) => {
   try {
     const fullUrl = `${API_URL}/auth/login/`;
-    console.log("Full login URL:", fullUrl);
     
-    // Use direct axios without going through instance to troubleshoot
+    // Use direct axios without going through instance
     const response = await axios({
       method: 'post',
       url: fullUrl,
@@ -143,11 +122,6 @@ export const loginUser = async (username, password) => {
     
     return response.data;
   } catch (error) {
-    console.error('Login error:', error);
-    if (error.response) {
-      console.error('Response status:', error.response.status);
-      console.error('Response data:', error.response.data);
-    }
     throw error;
   }
 };
@@ -171,18 +145,8 @@ export const logoutUser = async () => {
 export const getUserProfile = async () => {
   try {
     const response = await authAxios.get('/auth/profile/');
-    const data = response.data;
-    
-    // Debug profile picture URL
-    if (data.artist && data.artist.profile_picture) {
-      console.log("Profile picture URL:", data.artist.profile_picture);
-      const isValid = await checkImageUrl(data.artist.profile_picture);
-      console.log("Profile picture URL is valid:", isValid);
-    }
-    
-    return data;
+    return response.data;
   } catch (error) {
-    console.error("Error fetching user profile:", error);
     throw error;
   }
 };
@@ -247,28 +211,9 @@ export const getArtworkById = async (id) => {
 
 export const createArtwork = async (artworkData) => {
   try {
-    console.log("Creating artwork with data:", artworkData);
-    // Log the form data contents
-    for (let pair of artworkData.entries()) {
-      console.log(pair[0] + ': ' + (pair[1] instanceof File ? 
-        `File: ${pair[1].name} (${pair[1].type}, ${pair[1].size} bytes)` : 
-        pair[1]));
-    }
-    
-    const response = await authAxios.post('/artworks/', artworkData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    
-    console.log("Artwork creation response:", response.data);
+    const response = await authAxios.post('/artworks/', artworkData);
     return response.data;
   } catch (error) {
-    console.error("Error creating artwork:", error);
-    if (error.response && error.response.data) {
-      console.error("Server error details:", error.response.data);
-      throw new Error(error.response.data.detail || "Failed to create artwork");
-    }
     throw error;
   }
 };
