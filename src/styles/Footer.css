@@ -178,22 +178,7 @@
     }
 }
 
-/* 📌 Ensure Footer Stays at Bottom */
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-#root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
+/* Ensure main content has flex: 1 to push footer to bottom */
 main {
     flex: 1;
 }
