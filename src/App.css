@@ -27,6 +27,7 @@ body {
   color: var(--metallic-text-dark);
   line-height: 1.5;
   font-weight: 500;  /* Added explicit weight */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* 🌟 Main App Container */
@@ -35,11 +36,13 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding-top: 0; /* Ensure no top padding here */
+  margin-top: 0; /* Ensure no top margin here */
 }
 
 main {
   flex: 1;
-  margin-top: 70px; /* Adjust based on your header height */
+  margin-top: 70px; /* Exactly match header height */
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
@@ -112,6 +115,6 @@ button.secondary:hover {
 /* 🌟 Responsive Adjustments */
 @media (max-width: 768px) {
   main {
-    margin-top: 120px; /* Adjust for mobile header which might be taller */
+    margin-top: 60px; /* Match mobile header height from Header.css */
   }
 }

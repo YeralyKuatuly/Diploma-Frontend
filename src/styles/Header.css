@@ -207,15 +207,26 @@
     }
 }
 
-/* Add padding to main content for the fixed header */
+/* Remove padding-top from root and add it to main instead */
 #root {
-    padding-top: 70px;
+    /* Remove the padding-top from here */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Add padding to main content for the fixed header */
+main {
+    margin-top: 70px; /* Match the header height */
+    flex: 1;
 }
 
 /* Remove any margin or padding from the body and html elements */
 body, html {
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Fix app bar buttons in mobile view */
