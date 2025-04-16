@@ -178,7 +178,15 @@
     }
 }
 
-/* Ensure main content has flex: 1 to push footer to bottom */
+/* 📌 Ensure Footer Stays at Bottom */
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 main {
     flex: 1;
+}
 }

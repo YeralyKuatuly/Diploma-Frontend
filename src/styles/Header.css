@@ -8,11 +8,6 @@
     --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
 }
 
-body, html {
-    margin: 0;
-    padding: 0;
-}
-
 .header {
     position: fixed;
     top: 0;
@@ -204,18 +199,23 @@ body, html {
     .header-actions {
         gap: 8px;
     }
+    
+    /* Fix spacing for mobile viewport */
+    main {
+        margin-top: 60px;
+        padding-top: 1rem;
+    }
 }
 
-/* Content wrapper to compensate for fixed header */
+/* Add padding to main content for the fixed header */
 #root {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding-top: 70px; /* Same as header height */
+    padding-top: 70px;
 }
 
-main {
-    flex: 1;
+/* Remove any margin or padding from the body and html elements */
+body, html {
+    margin: 0;
+    padding: 0;
 }
 
 /* Fix app bar buttons in mobile view */
@@ -231,9 +231,5 @@ main {
     /* Ensure iconButton has correct spacing */
     .header-actions .MuiIconButton-root svg {
         font-size: 1.35rem;
-    }
-    
-    #root {
-        padding-top: 60px; /* Match the header height for mobile */
     }
 }
