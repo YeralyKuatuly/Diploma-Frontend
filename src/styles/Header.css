@@ -4,7 +4,7 @@
     --metallic-accent: #8697C4;  /* Cool Slate */
     --metallic-light: #ADBBDA;  /* Muted Silver */
     --metallic-background: #EDE8F5;  /* Platinum Mist */
-    --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+    --metallic-text-dark: #000000;  /* Changed to black for better contrast */
     --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
 }
 
@@ -29,7 +29,7 @@
     align-items: center;
     text-decoration: none;
     transition: transform 0.3s ease-in-out;
-    color: var(--metallic-text-dark);
+    color: var(--metallic-text-light) !important; /* Make the logo white for better visibility */
     margin-right: auto; /* Push everything else to the right */
     padding-left: 0; /* Ensure no padding on the left */
     position: relative; /* For absolute positioning if needed */
@@ -42,7 +42,7 @@
     transform: scale(1.05); /* Slight grow effect on hover */
 }
 
-metallic-logo {
+.metallic-logo {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--metallic-text-light); /* Ensures contrast */
@@ -142,59 +142,93 @@ metallic-logo {
     background-color: var(--metallic-primary);
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
-    .header {
-        padding: 0.5rem 1rem;
-        flex-wrap: wrap;
-        height: auto;
-    }
-
-    .menu-button {
-        display: block;
-        order: 2;
-    }
-
-    .nav-links {
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 1rem 0;
-        order: 3;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .search-box {
-        width: 100%;
-        margin-top: 1rem;
-        order: 4;
-    }
-
-    .logo {
-        flex: 1;
-        order: 1;
-    }
-    
-    .auth-button {
-        margin-left: 0;
-        margin-top: 1rem;
-        width: 100%;
-        order: 5;
-    }
-}
-
 .header-actions {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
+/* Mobile Drawer Styles */
+.mobile-drawer .MuiPaper-root {
+    background-color: var(--metallic-background);
+    color: var(--metallic-text-dark);
+    width: 260px;
+}
+
+.mobile-drawer .MuiListItem-root {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.mobile-drawer .MuiListItem-root:hover {
+    background-color: rgba(61, 82, 160, 0.1);
+}
+
+.mobile-drawer .MuiListItemText-primary {
+    font-weight: 500;
+    color: var(--metallic-text-dark);
+}
+
+.mobile-menu-button {
+    color: var(--metallic-text-light) !important;
+}
+
+/* Mobile styles */
+@media (max-width: 1024px) {
+    .header {
+        padding: 0 1rem;
+    }
+    
+    .auth-button {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 768px) {
+    .header {
+        padding: 0 1rem;
+        height: 60px;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
     .header-actions {
-        gap: 10px;
+        gap: 8px;
+    }
+    
+    /* Fix spacing for mobile viewport */
+    main {
+        margin-top: 60px;
+        padding-top: 1rem;
+    }
+    
+    /* Create space for fixed header */
+    body {
+        padding-top: 60px;
+    }
+}
+
+/* Add padding to main content for the fixed header */
+#root {
+    padding-top: 70px;
+}
+
+/* Fix app bar buttons in mobile view */
+@media (max-width: 600px) {
+    .MuiBadge-root {
+        margin-right: 0 !important;
+    }
+    
+    .header-actions .MuiIconButton-root {
+        padding: 8px;
+    }
+    
+    /* Ensure iconButton has correct spacing */
+    .header-actions .MuiIconButton-root svg {
+        font-size: 1.35rem;
     }
 }

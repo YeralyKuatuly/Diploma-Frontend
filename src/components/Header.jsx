@@ -11,10 +11,18 @@ import {
   Menu,
   MenuItem,
   Avatar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import '../styles/Header.css'; // Import CSS file
 import { useAuth } from '../context/AuthContext';
@@ -27,7 +35,10 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // Debug log to check auth status
   console.log("Header rendered with isLoggedIn:", isLoggedIn);
@@ -82,6 +93,7 @@ const Header = () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       navigate('/login');
+      handleMobileMenuClose();
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -103,6 +115,14 @@ const Header = () => {
     setNotificationAnchorEl(null);
   };
 
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuOpen(false);
+  };
+
   const handleMarkAsRead = async (notificationId) => {
     try {
       await axios.post(`/api/notifications/${notificationId}/mark_read/`);
@@ -111,6 +131,86 @@ const Header = () => {
       console.error('Failed to mark notification as read:', error);
     }
   };
+
+  const navItems = [
+    { label: 'Gallery', path: '/gallery' },
+    { label: 'Slideshow', path: '/slideshow' },
+    { label: 'Artists', path: '/artists' },
+  ];
+
+  const authNavItems = [
+    { label: 'Add Art', path: '/add-art' },
+    { label: 'Profile', path: '/profile' },
+    { label: 'Subscriptions', path: '/subscriptions' },
+  ];
+
+  const mobileDrawer = (
+    <Drawer
+      anchor="right"
+      open={mobileMenuOpen}
+      onClose={handleMobileMenuClose}
+      className="mobile-drawer"
+    >
+      <Box sx={{ width: 250, p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+          <IconButton onClick={handleMobileMenuClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        
+        <List>
+          {navItems.map((item) => (
+            <ListItem 
+              button 
+              key={item.path} 
+              component={RouterLink} 
+              to={item.path}
+              onClick={handleMobileMenuClose}
+            >
+              <ListItemText primary={item.label} />
+            </ListItem>
+          ))}
+          
+          {isLoggedIn && authNavItems.map((item) => (
+            <ListItem 
+              button 
+              key={item.path} 
+              component={RouterLink} 
+              to={item.path}
+              onClick={handleMobileMenuClose}
+            >
+              <ListItemText primary={item.label} />
+            </ListItem>
+          ))}
+          
+          {isLoggedIn ? (
+            <ListItem button onClick={handleLogout}>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          ) : (
+            <>
+              <ListItem 
+                button 
+                component={RouterLink} 
+                to="/login"
+                onClick={handleMobileMenuClose}
+              >
+                <ListItemText primary="Login" />
+              </ListItem>
+              <ListItem 
+                button 
+                component={RouterLink} 
+                to="/register"
+                onClick={handleMobileMenuClose}
+              >
+                <ListItemText primary="Register" />
+              </ListItem>
+            </>
+          )}
+        </List>
+      </Box>
+    </Drawer>
+  );
 
   return (
     <AppBar position="static" className="header">
@@ -137,61 +237,34 @@ const Header = () => {
           Art Gallery
         </Typography>
 
-        {/* Navigation Links */}
-        <Box sx={{ display: 'flex', mr: 2 }} className="nav-links">
-          <Button 
-            color="inherit" 
-            component={RouterLink} 
-            to="/gallery"
-            sx={{ mr: 1 }}
-          >
-            Gallery
-          </Button>
-          <Button 
-            color="inherit" 
-            component={RouterLink} 
-            to="/slideshow"
-            sx={{ mr: 1 }}
-          >
-            Slideshow
-          </Button>
-          <Button 
-            color="inherit" 
-            component={RouterLink} 
-            to="/artists"
-            sx={{ mr: 1 }}
-          >
-            Artists
-          </Button>
-          {isLoggedIn && (
-            <>
+        {/* Desktop Navigation Links */}
+        {!isMobile && (
+          <Box sx={{ display: 'flex', mr: 2 }} className="nav-links">
+            {navItems.map((item) => (
               <Button 
+                key={item.path}
                 color="inherit" 
                 component={RouterLink} 
-                to="/add-art"
+                to={item.path}
                 sx={{ mr: 1 }}
               >
-                Add Art
+                {item.label}
               </Button>
+            ))}
+            
+            {isLoggedIn && authNavItems.map((item) => (
               <Button 
+                key={item.path}
                 color="inherit" 
                 component={RouterLink} 
-                to="/profile"
+                to={item.path}
                 sx={{ mr: 1 }}
               >
-                Profile
+                {item.label}
               </Button>
-              <Button 
-                color="inherit" 
-                component={RouterLink} 
-                to="/subscriptions"
-                sx={{ mr: 1 }}
-              >
-                Subscriptions
-              </Button>
-            </>
-          )}
-        </Box>
+            ))}
+          </Box>
+        )}
 
         {isLoggedIn ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }} className="header-actions">
@@ -219,21 +292,31 @@ const Header = () => {
               </Badge>
             </IconButton>
 
-            <IconButton
-              color="inherit"
-              onClick={handleMenuClick}
-              sx={{ ml: 1 }}
-            >
-              {user?.profile_picture ? (
-                <Avatar
-                  src={user.profile_picture}
-                  alt={user?.username || 'User'}
-                  sx={{ width: 32, height: 32 }}
-                />
-              ) : (
-                <AccountCircleIcon />
-              )}
-            </IconButton>
+            {isMobile ? (
+              <IconButton
+                color="inherit"
+                onClick={handleMobileMenuToggle}
+                className="mobile-menu-button"
+              >
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              <IconButton
+                color="inherit"
+                onClick={handleMenuClick}
+                sx={{ ml: 1 }}
+              >
+                {user?.profile_picture ? (
+                  <Avatar
+                    src={user.profile_picture}
+                    alt={user?.username || 'User'}
+                    sx={{ width: 32, height: 32 }}
+                  />
+                ) : (
+                  <AccountCircleIcon />
+                )}
+              </IconButton>
+            )}
 
             <Menu
               anchorEl={anchorEl}
@@ -285,27 +368,40 @@ const Header = () => {
           </Box>
         ) : (
           <Box className="header-actions">
-            <Button
-              color="inherit"
-              component={RouterLink}
-              to="/login"
-              sx={{ mr: 1 }}
-              className="auth-button"
-            >
-              Login
-            </Button>
-            <Button
-              color="inherit"
-              component={RouterLink}
-              to="/register"
-              variant="outlined"
-              className="auth-button"
-            >
-              Register
-            </Button>
+            {isMobile ? (
+              <IconButton
+                color="inherit"
+                onClick={handleMobileMenuToggle}
+                className="mobile-menu-button"
+              >
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              <>
+                <Button
+                  color="inherit"
+                  component={RouterLink}
+                  to="/login"
+                  sx={{ mr: 1 }}
+                  className="auth-button"
+                >
+                  Login
+                </Button>
+                <Button
+                  color="inherit"
+                  component={RouterLink}
+                  to="/register"
+                  variant="outlined"
+                  className="auth-button"
+                >
+                  Register
+                </Button>
+              </>
+            )}
           </Box>
         )}
       </Toolbar>
+      {mobileDrawer}
     </AppBar>
   );
 };
