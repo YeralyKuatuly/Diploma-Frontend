@@ -164,10 +164,19 @@ export const checkImageUrl = async (url) => {
 
 export const updateUserProfile = async (userData) => {
   try {
-    const response = await authAxios.put('/auth/profile/', userData);
+    // Check if userData is FormData (for file uploads)
+    const isFormData = userData instanceof FormData;
+    
+    const response = await authAxios.put('/auth/profile/', userData, {
+      headers: isFormData ? {
+        'Content-Type': 'multipart/form-data'
+      } : {
+        'Content-Type': 'application/json'
+      }
+    });
+    
     return response.data;
   } catch (error) {
-    console.error('Update profile error:', error);
     throw error;
   }
 };

@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateUserProfile, deleteAccount } from "../api";
 import "../styles/Profile.css";
+
+// Default profile picture
+const DEFAULT_PROFILE_PIC = "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -10,11 +13,14 @@ const Profile = () => {
     first_name: '',
     last_name: '',
     email: '',
-    bio: ''
+    bio: '',
+    profile_picture: null
   });
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,11 +37,20 @@ const Profile = () => {
           first_name: data.first_name || '',
           last_name: data.last_name || '',
           email: data.email || '',
-          bio: data.bio || ''
+          bio: data.bio || '',
+          profile_picture: null
         });
+        
+        // Set preview URL from API or default
+        if (data.artist && data.artist.profile_picture) {
+          setPreviewUrl(data.artist.profile_picture);
+        } else {
+          setPreviewUrl(DEFAULT_PROFILE_PIC);
+        }
       } catch (err) {
         setError('Failed to load profile');
         console.error(err);
+        setPreviewUrl(DEFAULT_PROFILE_PIC);
       } finally {
         setIsLoading(false);
       }
@@ -52,6 +67,23 @@ const Profile = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData(prev => ({
+        ...prev,
+        profile_picture: file
+      }));
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -64,8 +96,20 @@ const Profile = () => {
         navigate('/login');
         return;
       }
+      
+      // Create form data for file upload
+      const submitData = new FormData();
+      submitData.append('first_name', formData.first_name);
+      submitData.append('last_name', formData.last_name);
+      submitData.append('email', formData.email);
+      submitData.append('bio', formData.bio);
+      
+      // Only append profile picture if it was selected
+      if (formData.profile_picture) {
+        submitData.append('profile_picture', formData.profile_picture);
+      }
 
-      await updateUserProfile(formData);
+      await updateUserProfile(submitData);
       setMessage('Profile updated successfully');
     } catch (err) {
       setError('Failed to update profile');
@@ -104,6 +148,38 @@ const Profile = () => {
       {message && <div className="success-message">{message}</div>}
       
       <form onSubmit={handleSubmit} className="profile-form">
+        <div className="profile-image-section">
+          <div className="profile-image-container">
+            <img 
+              src={previewUrl || DEFAULT_PROFILE_PIC} 
+              alt="Profile" 
+              className="profile-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = DEFAULT_PROFILE_PIC;
+              }}
+            />
+          </div>
+          
+          <div className="profile-image-controls">
+            <input
+              type="file"
+              accept="image/*"
+              id="profile_picture"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
+            <button 
+              type="button" 
+              className="upload-image-button"
+              onClick={() => fileInputRef.current.click()}
+            >
+              Upload New Photo
+            </button>
+          </div>
+        </div>
+        
         <div className="form-group">
           <label htmlFor="first_name">First Name</label>
           <input

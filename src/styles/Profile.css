@@ -4,7 +4,7 @@
   --metallic-accent: #8697C4;  /* Cool Slate */
   --metallic-light: #ADBBDA;  /* Muted Silver */
   --metallic-background: #EDE8F5;  /* Platinum Mist */
-  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
+  --metallic-text-dark: #000000;  /* Changed to pure black for better contrast */
   --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
   --metallic-error: #E74C3C;  /* Error Red */
   --metallic-success: #27AE60;  /* Success Green */
@@ -22,7 +22,7 @@
 
 .profile-container h2 {
   margin-bottom: 24px;
-  color: #333;
+  color: #000000; /* Changed to black for better contrast */
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
@@ -59,7 +59,7 @@
 
 .form-group label {
   font-weight: 500;
-  color: #555;
+  color: #000000; /* Changed to black for better contrast */
 }
 
 .form-group input,
@@ -68,11 +68,58 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  color: #000000; /* Changed to black for better contrast */
 }
 
 .form-group textarea {
   min-height: 120px;
   resize: vertical;
+}
+
+/* Profile Image Section */
+.profile-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.profile-image-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--metallic-primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-image-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload-image-button {
+  padding: 8px 16px;
+  background-color: var(--metallic-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.upload-image-button:hover {
+  background-color: #304080;
 }
 
 .form-actions {
@@ -141,7 +188,7 @@
   align-items: center;
   height: 200px;
   font-size: 18px;
-  color: #666;
+  color: #000000; /* Changed to black for better contrast */
 }
 
 /* 🌟 Profile Title */
@@ -159,21 +206,6 @@
   margin-bottom: 2rem;
 }
 
-/* 🌟 Profile Image */
-.profile-image-container {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--metallic-primary);
-}
-
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* 🌟 Profile Info */
 .profile-info h2 {
   margin: 0 0 0.5rem;
@@ -182,13 +214,13 @@
 }
 
 .username {
-  color: var(--metallic-accent);
+  color: #000000; /* Changed to black for better contrast */
   margin: 0 0 0.5rem;
   font-size: 0.9rem;
 }
 
 .email {
-  color: var(--metallic-text-dark);
+  color: #000000; /* Changed to black for better contrast */
   margin: 0;
 }
 
@@ -206,7 +238,7 @@
 }
 
 .profile-bio p {
-  color: var(--metallic-text-dark);
+  color: #000000; /* Changed to black for better contrast */
   line-height: 1.6;
 }
 
@@ -231,7 +263,7 @@
 
 .stat-label {
   font-size: 0.9rem;
-  color: var(--metallic-accent);
+  color: #000000; /* Changed to black for better contrast */
 }
 
 /* 🌟 Profile Actions */
