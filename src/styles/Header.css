@@ -199,10 +199,20 @@
     .header-actions {
         gap: 8px;
     }
+}
+
+/* Mobile icon adjustments */
+@media (max-width: 600px) {
+    .MuiBadge-root {
+        margin-right: 0 !important;
+    }
     
-    main {
-        margin-top: 60px;
-        padding: 15px;
+    .header-actions .MuiIconButton-root {
+        padding: 8px;
+    }
+    
+    .header-actions .MuiIconButton-root svg {
+        font-size: 1.35rem;
     }
 }
 
@@ -229,20 +239,4 @@ body, html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-}
-
-/* Fix app bar buttons in mobile view */
-@media (max-width: 600px) {
-    .MuiBadge-root {
-        margin-right: 0 !important;
-    }
-    
-    .header-actions .MuiIconButton-root {
-        padding: 8px;
-    }
-    
-    /* Ensure iconButton has correct spacing */
-    .header-actions .MuiIconButton-root svg {
-        font-size: 1.35rem;
-    }
 }
