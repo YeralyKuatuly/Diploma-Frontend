@@ -12,16 +12,16 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    right: 0;
     height: 70px;
-    background-color: var(--metallic-primary); /* Deep Royal Blue */
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
-    padding: 0 2rem;
+    background-color: var(--metallic-primary);
+    color: var(--metallic-text-light);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
     z-index: 1000;
-    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -200,33 +200,35 @@
         gap: 8px;
     }
     
-    /* Fix spacing for mobile viewport */
     main {
         margin-top: 60px;
-        padding-top: 1rem;
+        padding: 15px;
     }
 }
 
 /* Remove padding-top from root and add it to main instead */
 #root {
-    /* Remove the padding-top from here */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* Add padding to main content for the fixed header */
 main {
-    margin-top: 70px; /* Match the header height */
+    margin-top: 70px;
     flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 /* Remove any margin or padding from the body and html elements */
 body, html {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
 }
 
 /* Fix app bar buttons in mobile view */

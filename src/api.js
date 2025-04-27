@@ -198,22 +198,20 @@ export const deleteAccount = async () => {
 };
 
 // Artworks
-export const getArtworks = async (params = {}) => {
+export const getArtworks = async () => {
   try {
-    const response = await authAxios.get('/artworks/', { params });
+    const response = await plainAxios.get('/artworks/');
     return response.data;
   } catch (error) {
-    console.error("Error fetching artworks:", error);
-    return [];
+    throw error;
   }
 };
 
 export const getArtworkById = async (id) => {
   try {
-    const response = await authAxios.get(`/artworks/${id}/`);
+    const response = await plainAxios.get(`/artworks/${id}/`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching artwork ${id}:`, error);
     throw error;
   }
 };
