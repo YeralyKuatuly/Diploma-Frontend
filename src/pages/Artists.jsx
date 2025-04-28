@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { getArtists } from "../api";
 import "../styles/Artists.css";
 
+const DEFAULT_PROFILE_PIC = '/default-profile.jpg';
+
 const Artists = () => {
     const [artists, setArtists] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -66,11 +68,12 @@ const Artists = () => {
                         <div key={artist.id} className="artist-card">
                             <div className="artist-image-container">
                                 <img 
-                                    src={artist.profile_picture || '/default-profile.jpg'} 
+                                    src={artist.profile_picture || DEFAULT_PROFILE_PIC} 
                                     alt={artist.name} 
                                     className="artist-image"
                                     onError={(e) => {
-                                        e.target.src = '/default-profile.jpg';
+                                        e.target.onerror = null;
+                                        e.target.src = DEFAULT_PROFILE_PIC;
                                     }}
                                 />
                             </div>

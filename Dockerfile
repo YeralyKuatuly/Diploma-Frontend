@@ -7,10 +7,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
-RUN npm install jwt-decode
-RUN npm install lightningcss
+# Install dependencies in a single layer
+RUN npm ci --quiet && \
+    npm install --save jwt-decode lightningcss --quiet
 
 # Set default API URL with ARG - can be overridden at build time
 ARG VITE_API_URL=http://localhost:8000/api
@@ -19,7 +18,8 @@ ENV VITE_API_URL=${VITE_API_URL}
 # Copy source code
 COPY . .
 
-# Build the app
+# Build the app with CI environment
+ENV NODE_ENV=production
 RUN npm run build
 
 # Production stage

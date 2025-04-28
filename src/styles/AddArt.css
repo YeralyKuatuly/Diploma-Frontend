@@ -54,6 +54,7 @@
   font-size: 1rem;
   transition: border-color 0.3s;
   background-color: var(--metallic-background);
+  color: #000000;  /* Adding black text color */
 }
 
 .form-group input:focus,

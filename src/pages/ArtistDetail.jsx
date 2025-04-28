@@ -4,6 +4,8 @@ import { getArtistById, subscribeToArtist, unsubscribeFromArtist } from "../api"
 import { useAuth } from "../context/AuthContext";
 import "../styles/ArtistDetail.css";
 
+const DEFAULT_PROFILE_PIC = '/default-profile.jpg';
+
 const ArtistDetail = () => {
   const { id } = useParams();
   const [artist, setArtist] = useState(null);
@@ -78,11 +80,12 @@ const ArtistDetail = () => {
         <div className="artist-profile-header">
           <div className="artist-profile-image-container">
             <img 
-              src={artist.profile_picture || '/default-profile.jpg'} 
+              src={artist.profile_picture || DEFAULT_PROFILE_PIC} 
               alt={artist.name} 
               className="artist-profile-image"
               onError={(e) => {
-                e.target.src = '/default-profile.jpg';
+                e.target.onerror = null;
+                e.target.src = DEFAULT_PROFILE_PIC;
               }}
             />
           </div>

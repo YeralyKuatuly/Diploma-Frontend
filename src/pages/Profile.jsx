@@ -42,7 +42,9 @@ const Profile = () => {
         });
         
         // Set preview URL from API or default
-        if (data.artist && data.artist.profile_picture) {
+        if (data.profile_picture) {
+          setPreviewUrl(data.profile_picture);
+        } else if (data.artist && data.artist.profile_picture) {
           setPreviewUrl(data.artist.profile_picture);
         } else {
           setPreviewUrl(DEFAULT_PROFILE_PIC);
@@ -228,6 +230,13 @@ const Profile = () => {
         <div className="form-actions">
           <button type="submit" disabled={isLoading} className="save-button">
             {isLoading ? 'Saving...' : 'Save Changes'}
+          </button>
+          <button 
+            type="button" 
+            onClick={() => navigate('/')}
+            className="cancel-button"
+          >
+            Cancel
           </button>
         </div>
       </form>
