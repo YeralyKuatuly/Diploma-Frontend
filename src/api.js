@@ -5,6 +5,8 @@ import { jwtDecode } from 'jwt-decode';
 const DEFAULT_API_URL = "http://46.101.105.28/api";
 export const API_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
 
+console.log("API URL configured as:", API_URL);
+
 // Create direct axios instance with no authentication
 const plainAxios = axios.create({
   baseURL: API_URL,
@@ -20,6 +22,7 @@ const getRefreshToken = () => localStorage.getItem('refreshToken');
 
 // Create an axios instance for authenticated requests
 export const createAuthAxios = () => {
+  console.log("Creating auth axios instance with baseURL:", API_URL);
   const instance = axios.create({
     baseURL: API_URL,
     headers: {
@@ -30,9 +33,11 @@ export const createAuthAxios = () => {
 
   instance.interceptors.request.use(
     (config) => {
+      console.log(`Making ${config.method.toUpperCase()} request to: ${config.baseURL}${config.url}`);
       const token = getAccessToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+        console.log("Authorization header added");
       }
       return config;
     },
@@ -81,8 +86,8 @@ export const createAuthAxios = () => {
   return instance;
 };
 
-// Create a singleton instance
-const authAxios = createAuthAxios();
+// Create a new instance each time to ensure we have the latest configuration
+const getAuthAxios = () => createAuthAxios();
 
 // Authentication
 export const registerUser = async (userData) => {
@@ -130,7 +135,7 @@ export const logoutUser = async () => {
   try {
     const refreshToken = getRefreshToken();
     if (refreshToken) {
-      await authAxios.post('/auth/logout/', {
+      await getAuthAxios().post('/auth/logout/', {
         refresh: refreshToken
       });
     }
@@ -144,7 +149,8 @@ export const logoutUser = async () => {
 // User Profile
 export const getUserProfile = async () => {
   try {
-    const response = await authAxios.get('/auth/profile/');
+    console.log("Getting user profile from:", `${API_URL}/auth/profile/`);
+    const response = await getAuthAxios().get('/auth/profile/');
     return response.data;
   } catch (error) {
     throw error;
@@ -167,7 +173,7 @@ export const updateUserProfile = async (userData) => {
     // Check if userData is FormData (for file uploads)
     const isFormData = userData instanceof FormData;
     
-    const response = await authAxios.put('/auth/profile/', userData, {
+    const response = await getAuthAxios().put('/auth/profile/', userData, {
       headers: isFormData ? {
         'Content-Type': 'multipart/form-data'
       } : {
@@ -183,7 +189,7 @@ export const updateUserProfile = async (userData) => {
 
 export const deleteAccount = async () => {
   try {
-    await authAxios.delete('/auth/delete/');
+    await getAuthAxios().delete('/auth/delete/');
     // Clear tokens and redirect to login
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -218,9 +224,22 @@ export const getArtworkById = async (id) => {
 
 export const createArtwork = async (artworkData) => {
   try {
-    const response = await authAxios.post('/artworks/', artworkData);
+    console.log("Creating artwork with data:", Object.fromEntries(artworkData.entries()));
+    console.log("Request URL:", `${API_URL}/artworks/`);
+    
+    const authInstance = getAuthAxios();
+    const response = await authInstance.post('/artworks/', artworkData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+    
     return response.data;
   } catch (error) {
+    console.error("Create artwork error:", error);
+    if (error.response) {
+      console.error("Response data:", error.response.data);
+    }
     throw error;
   }
 };
@@ -228,7 +247,7 @@ export const createArtwork = async (artworkData) => {
 export const updateArtwork = async (id, artworkData) => {
   try {
     console.log("Updating artwork with data:", artworkData);
-    const response = await authAxios.put(`/artworks/${id}/`, artworkData, {
+    const response = await getAuthAxios().put(`/artworks/${id}/`, artworkData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -245,7 +264,7 @@ export const updateArtwork = async (id, artworkData) => {
 
 export const deleteArtwork = async (id) => {
   try {
-    await authAxios.delete(`/artworks/${id}/`);
+    await getAuthAxios().delete(`/artworks/${id}/`);
     return true;
   } catch (error) {
     console.error("Error deleting artwork:", error);
@@ -259,7 +278,7 @@ export const deleteArtwork = async (id) => {
 // Artists
 export const getArtists = async () => {
   try {
-    const response = await authAxios.get('/artists/');
+    const response = await getAuthAxios().get('/artists/');
     return response.data;
   } catch (error) {
     console.error("Error fetching artists:", error);
@@ -270,7 +289,7 @@ export const getArtists = async () => {
 export const getArtistById = async (id) => {
   try {
     console.log(`Fetching artist with ID: ${id}`);
-    const response = await authAxios.get(`/artists/${id}/`);
+    const response = await getAuthAxios().get(`/artists/${id}/`);
     console.log("Artist data received:", response.data);
     return response.data;
   } catch (error) {
@@ -282,7 +301,7 @@ export const getArtistById = async (id) => {
 // Subscriptions
 export const subscribeToArtist = async (artistId) => {
   try {
-    const response = await authAxios.post(`/artists/${artistId}/subscribe/`);
+    const response = await getAuthAxios().post(`/artists/${artistId}/subscribe/`);
     return response.data;
   } catch (error) {
     console.error(`Error subscribing to artist ${artistId}:`, error);
@@ -295,7 +314,7 @@ export const subscribeToArtist = async (artistId) => {
 
 export const unsubscribeFromArtist = async (artistId) => {
   try {
-    const response = await authAxios.post(`/artists/${artistId}/unsubscribe/`);
+    const response = await getAuthAxios().post(`/artists/${artistId}/unsubscribe/`);
     return response.data;
   } catch (error) {
     console.error(`Error unsubscribing from artist ${artistId}:`, error);
@@ -309,7 +328,7 @@ export const unsubscribeFromArtist = async (artistId) => {
 // Notifications
 export const getNotifications = async () => {
   try {
-    const response = await authAxios.get('/notifications/');
+    const response = await getAuthAxios().get('/notifications/');
     return response.data;
   } catch (error) {
     console.error("Error fetching notifications:", error);
@@ -322,7 +341,7 @@ export const getNotifications = async () => {
 
 export const markNotificationAsRead = async (notificationId) => {
   try {
-    const response = await authAxios.post(`/notifications/${notificationId}/mark_read/`);
+    const response = await getAuthAxios().post(`/notifications/${notificationId}/mark_read/`);
     return response.data;
   } catch (error) {
     console.error(`Error marking notification ${notificationId} as read:`, error);
@@ -332,7 +351,7 @@ export const markNotificationAsRead = async (notificationId) => {
 
 export const markAllNotificationsAsRead = async () => {
   try {
-    const response = await authAxios.post('/notifications/mark_all_read/');
+    const response = await getAuthAxios().post('/notifications/mark_all_read/');
     return response.data;
   } catch (error) {
     console.error("Error marking all notifications as read:", error);
@@ -343,7 +362,7 @@ export const markAllNotificationsAsRead = async () => {
 // User subscriptions
 export const getUserSubscriptions = async () => {
   try {
-    const response = await authAxios.get('/auth/subscriptions/');
+    const response = await getAuthAxios().get('/auth/subscriptions/');
     return response.data;
   } catch (error) {
     console.error("Error fetching user subscriptions:", error);
@@ -358,7 +377,7 @@ export const getUserSubscriptions = async () => {
 export const getCart = async () => {
   try {
     console.log("Fetching cart");
-    const response = await authAxios.get('/cart/');
+    const response = await getAuthAxios().get('/cart/');
     console.log("Cart response:", response.data);
     return response.data;
   } catch (error) {
@@ -383,7 +402,7 @@ export const addToCart = async (artworkId, quantity = 1) => {
     console.log("Request URL:", `/cart/items/`);
     console.log("Authorization token exists:", !!getAccessToken());
     
-    const response = await authAxios.post('/cart/items/', payload);
+    const response = await getAuthAxios().post('/cart/items/', payload);
     console.log("Add to cart response:", response.data);
     return response.data;
   } catch (error) {
@@ -403,7 +422,7 @@ export const addToCart = async (artworkId, quantity = 1) => {
 
 export const updateCartItem = async (itemId, quantity) => {
   try {
-    const response = await authAxios.put(`/cart/items/${itemId}/`, {
+    const response = await getAuthAxios().put(`/cart/items/${itemId}/`, {
       quantity: quantity,
     });
     return response.data;
@@ -415,7 +434,7 @@ export const updateCartItem = async (itemId, quantity) => {
 export const removeFromCart = async (itemId) => {
   try {
     console.log(`Removing item ${itemId} from cart`);
-    const response = await authAxios.delete(`/cart/items/${itemId}/`);
+    const response = await getAuthAxios().delete(`/cart/items/${itemId}/`);
     console.log("Remove from cart response:", response.data);
     return response.data;
   } catch (error) {
@@ -430,7 +449,7 @@ export const removeFromCart = async (itemId) => {
 
 export const clearCart = async () => {
   try {
-    await authAxios.delete('/cart/clear/');
+    await getAuthAxios().delete('/cart/clear/');
   } catch (error) {
     throw error.response?.data || { message: 'Failed to clear cart' };
   }
@@ -440,7 +459,7 @@ export const clearCart = async () => {
 export const getOrders = async () => {
   try {
     console.log("Fetching orders");
-    const response = await authAxios.get('/orders/');
+    const response = await getAuthAxios().get('/orders/');
     console.log("Orders response:", response.data);
     return response.data;
   } catch (error) {
@@ -456,7 +475,7 @@ export const getOrders = async () => {
 export const getOrderById = async (orderId) => {
   try {
     console.log(`Fetching order ${orderId}`);
-    const response = await authAxios.get(`/orders/${orderId}/`);
+    const response = await getAuthAxios().get(`/orders/${orderId}/`);
     console.log("Order response:", response.data);
     return response.data;
   } catch (error) {
@@ -472,7 +491,7 @@ export const getOrderById = async (orderId) => {
 export const createOrder = async (shippingAddress) => {
   try {
     console.log("Creating order with shipping address:", shippingAddress);
-    const response = await authAxios.post('/orders/', {
+    const response = await getAuthAxios().post('/orders/', {
       shipping_address: shippingAddress
     });
     console.log("Create order response:", response.data);
@@ -490,7 +509,7 @@ export const createOrder = async (shippingAddress) => {
 export const cancelOrder = async (orderId) => {
   try {
     console.log(`Cancelling order ${orderId}`);
-    const response = await authAxios.post(`/orders/${orderId}/cancel/`);
+    const response = await getAuthAxios().post(`/orders/${orderId}/cancel/`);
     console.log("Cancel order response:", response.data);
     return response.data;
   } catch (error) {

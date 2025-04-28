@@ -15,24 +15,42 @@ const AddArt = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [debugInfo, setDebugInfo] = useState(null);
 
   useEffect(() => {
     const fetchArtists = async () => {
       try {
+        console.log("Fetching artists...");
         const data = await getArtists();
+        console.log("Artists data:", data);
         setArtists(data);
         
         // Find current user's artist profile
         const token = localStorage.getItem('accessToken');
         if (token) {
-          const userId = JSON.parse(atob(token.split('.')[1])).user_id;
-          const userArtist = data.find(artist => artist.user.id === userId);
-          if (userArtist) {
-            setCurrentUser(userArtist);
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            console.log("Token payload:", payload);
+            const userId = payload.user_id;
+            console.log("Current user ID:", userId);
+            
+            const userArtist = data.find(artist => artist.user && artist.user.id === userId);
+            console.log("Found user artist:", userArtist);
+            
+            if (userArtist) {
+              setCurrentUser(userArtist);
+            } else {
+              console.log("No matching artist profile found for user");
+            }
+          } catch (e) {
+            console.error("Error parsing token:", e);
           }
+        } else {
+          console.log("No access token found");
         }
       } catch (err) {
-        setError("Failed to load artists");
+        console.error("Error fetching artists:", err);
+        setError("Failed to load artists: " + (err.message || "Unknown error"));
       }
     };
     fetchArtists();
@@ -50,6 +68,7 @@ const AddArt = () => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+    setDebugInfo(null);
 
     try {
       const token = localStorage.getItem('accessToken');
@@ -58,15 +77,48 @@ const AddArt = () => {
       }
 
       const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) formDataToSend.append(key, value);
-      });
-
-      await createArtwork(formDataToSend);
+      
+      // Only add necessary fields, explicitly excluding 'artist'
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+      
+      // Log what we're sending
+      const formDataDebug = {};
+      for (let [key, value] of formDataToSend.entries()) {
+        formDataDebug[key] = value instanceof File ? 
+          `File: ${value.name} (${value.type}, ${value.size} bytes)` : 
+          value;
+      }
+      console.log("Sending form data:", formDataDebug);
+      
+      const result = await createArtwork(formDataToSend);
+      console.log("Artwork created successfully:", result);
       navigate("/artworks");
     } catch (err) {
       console.error("Error creating artwork:", err);
-      setError(err.response?.data?.detail || err.message || "Failed to create artwork");
+      // Show detailed error info
+      const errorDetails = {
+        message: err.message,
+        response: err.response ? {
+          status: err.response.status,
+          data: err.response.data
+        } : 'No response',
+        request: err.request ? 'Request sent but no response' : 'Request not sent'
+      };
+      console.log("Error details:", errorDetails);
+      setDebugInfo(JSON.stringify(errorDetails, null, 2));
+      
+      setError(
+        err.response?.data?.detail || 
+        err.response?.data?.error || 
+        err.message || 
+        "Failed to create artwork"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +178,7 @@ const AddArt = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="image">Image</label>
+          <label htmlFor="image">Image (optional)</label>
           <input
             type="file"
             id="image"
@@ -140,6 +192,13 @@ const AddArt = () => {
           {isLoading ? "Creating..." : "Add Artwork"}
         </button>
       </form>
+      
+      {debugInfo && (
+        <div className="debug-info">
+          <h3>Debug Information</h3>
+          <pre>{debugInfo}</pre>
+        </div>
+      )}
     </div>
   );
 };
