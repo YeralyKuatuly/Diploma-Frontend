@@ -242,7 +242,7 @@ const Header = () => {
 
         {/* Desktop Navigation Links */}
         {!isMobile && (
-          <Box sx={{ display: 'flex', mr: 2 }} className="nav-links">
+        <Box sx={{ display: 'flex', mr: 2 }} className="nav-links">
             {navItems.map((item) => (
               <Button 
                 key={item.path}
@@ -266,7 +266,7 @@ const Header = () => {
                 {item.label}
               </Button>
             ))}
-          </Box>
+        </Box>
         )}
 
         {isLoggedIn ? (
@@ -304,25 +304,25 @@ const Header = () => {
                 <MenuIcon />
               </IconButton>
             ) : (
-              <IconButton
-                color="inherit"
-                onClick={handleMenuClick}
-                sx={{ ml: 1 }}
-              >
-                {user?.profile_picture ? (
-                  <Avatar
-                    src={user.profile_picture}
-                    alt={user?.username || 'User'}
-                    sx={{ width: 32, height: 32 }}
-                  />
-                ) : (
+            <IconButton
+              color="inherit"
+              onClick={handleMenuClick}
+              sx={{ ml: 1 }}
+            >
+              {user?.profile_picture ? (
+                <Avatar
+                  src={user.profile_picture}
+                  alt={user?.username || 'User'}
+                  sx={{ width: 32, height: 32 }}
+                />
+              ) : (
                   <Avatar
                     src={DEFAULT_PROFILE_PICTURE}
                     alt={user?.username || 'User'}
                     sx={{ width: 32, height: 32 }}
                   />
-                )}
-              </IconButton>
+              )}
+            </IconButton>
             )}
 
             <Menu
@@ -385,24 +385,24 @@ const Header = () => {
               </IconButton>
             ) : (
               <>
-                <Button
-                  color="inherit"
-                  component={RouterLink}
-                  to="/login"
-                  sx={{ mr: 1 }}
-                  className="auth-button"
-                >
-                  Login
-                </Button>
-                <Button
-                  color="inherit"
-                  component={RouterLink}
-                  to="/register"
-                  variant="outlined"
-                  className="auth-button"
-                >
-                  Register
-                </Button>
+            <Button
+              color="inherit"
+              component={RouterLink}
+              to="/login"
+              sx={{ mr: 1 }}
+              className="auth-button"
+            >
+              Login
+            </Button>
+            <Button
+              color="inherit"
+              component={RouterLink}
+              to="/register"
+              variant="outlined"
+              className="auth-button"
+            >
+              Register
+            </Button>
               </>
             )}
           </Box>

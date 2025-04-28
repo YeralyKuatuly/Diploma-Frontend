@@ -192,11 +192,11 @@
         padding: 0 1rem;
         height: 60px;
     }
-    
+
     .logo {
         font-size: 1.2rem;
     }
-    
+
     .header-actions {
         gap: 8px;
     }
@@ -207,11 +207,11 @@
     .MuiBadge-root {
         margin-right: 0 !important;
     }
-    
+
     .header-actions .MuiIconButton-root {
         padding: 8px;
     }
-    
+
     .header-actions .MuiIconButton-root svg {
         font-size: 1.35rem;
     }
