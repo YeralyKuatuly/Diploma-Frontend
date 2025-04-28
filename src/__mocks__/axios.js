@@ -17,7 +17,7 @@ const axios = {
   post: jest.fn(() => Promise.resolve({ data: {} })),
   get: jest.fn(() => Promise.resolve({ data: {} })),
   defaults: {
-    baseURL: 'http://localhost:8000/api'
+    baseURL: 'http://46.101.105.28/api'
   },
   interceptors: {
     request: {

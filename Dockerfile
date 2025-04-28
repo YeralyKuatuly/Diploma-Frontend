@@ -12,7 +12,7 @@ RUN npm ci --quiet && \
     npm install --save jwt-decode lightningcss --quiet
 
 # Set default API URL with ARG - can be overridden at build time
-ARG VITE_API_URL=http://localhost:8000/api
+ARG VITE_API_URL=http://46.101.105.28/api
 ENV VITE_API_URL=${VITE_API_URL}
 
 # Copy source code

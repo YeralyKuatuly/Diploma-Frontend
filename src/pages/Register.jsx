@@ -4,7 +4,7 @@ import { registerUser, API_URL } from "../api";
 import "../styles/Register.css";
 
 // Default API URL as fallback when environment variable is not set
-const DEFAULT_API_URL = "http://localhost:8000/api";
+const DEFAULT_API_URL = "http://46.101.105.28/api";
 
 const Register = () => {
   const [formData, setFormData] = useState({

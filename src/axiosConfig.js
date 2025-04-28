@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Set the default base URL for all axios requests
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'http://46.101.105.28';
 
 // Add a request interceptor to include the JWT token in the headers
 axios.interceptors.request.use(
