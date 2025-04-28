@@ -10,17 +10,27 @@ const AddArt = () => {
     description: "",
     price: "",
     image: null,
-    artist: "",
   });
   const [artists, setArtists] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchArtists = async () => {
       try {
         const data = await getArtists();
         setArtists(data);
+        
+        // Find current user's artist profile
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const userId = JSON.parse(atob(token.split('.')[1])).user_id;
+          const userArtist = data.find(artist => artist.user.id === userId);
+          if (userArtist) {
+            setCurrentUser(userArtist);
+          }
+        }
       } catch (err) {
         setError("Failed to load artists");
       }
@@ -55,7 +65,8 @@ const AddArt = () => {
       await createArtwork(formDataToSend);
       navigate("/artworks");
     } catch (err) {
-      setError(err.message || "Failed to create artwork");
+      console.error("Error creating artwork:", err);
+      setError(err.response?.data?.detail || err.message || "Failed to create artwork");
     } finally {
       setIsLoading(false);
     }
@@ -65,6 +76,17 @@ const AddArt = () => {
     <div className="add-art-container">
       <h2>Add New Artwork</h2>
       {error && <div className="error-message">{error}</div>}
+      
+      {currentUser ? (
+        <div className="current-artist-info">
+          <p>Creating artwork as: <strong>{currentUser.name}</strong></p>
+        </div>
+      ) : (
+        <div className="warning-message">
+          <p>You need to be registered as an artist to add artwork.</p>
+        </div>
+      )}
+      
       <form onSubmit={handleSubmit} className="add-art-form">
         <div className="form-group">
           <label htmlFor="title">Title</label>
@@ -111,29 +133,10 @@ const AddArt = () => {
             name="image"
             onChange={handleChange}
             accept="image/*"
-            required
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="artist">Artist</label>
-          <select
-            id="artist"
-            name="artist"
-            value={formData.artist}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select an artist</option>
-            {artists.map((artist) => (
-              <option key={artist.id} value={artist.id}>
-                {artist.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button type="submit" disabled={isLoading}>
+        <button type="submit" disabled={isLoading || !currentUser}>
           {isLoading ? "Creating..." : "Add Artwork"}
         </button>
       </form>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 
 // Define API URL with correct path prefix and fallback
-const DEFAULT_API_URL = "http://localhost:8000/api";
+const DEFAULT_API_URL = "http://46.101.105.28/api";
 export const API_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
 
 // Create direct axios instance with no authentication
