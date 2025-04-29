@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getArtists } from "../api";
 import "../styles/Artists.css";
 
-const DEFAULT_PROFILE_PIC = '/default-profile.jpg';
+const DEFAULT_PROFILE_PIC = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg';
 
 const Artists = () => {
     const [artists, setArtists] = useState([]);

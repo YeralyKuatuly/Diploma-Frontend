@@ -37,14 +37,12 @@ const Profile = () => {
           first_name: data.first_name || '',
           last_name: data.last_name || '',
           email: data.email || '',
-          bio: data.bio || '',
+          bio: data.artist?.bio || '',
           profile_picture: null
         });
         
         // Set preview URL from API or default
-        if (data.profile_picture) {
-          setPreviewUrl(data.profile_picture);
-        } else if (data.artist && data.artist.profile_picture) {
+        if (data.artist?.profile_picture) {
           setPreviewUrl(data.artist.profile_picture);
         } else {
           setPreviewUrl(DEFAULT_PROFILE_PIC);

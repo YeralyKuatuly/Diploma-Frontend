@@ -309,9 +309,9 @@ const Header = () => {
               onClick={handleMenuClick}
               sx={{ ml: 1 }}
             >
-              {user?.profile_picture ? (
+              {user?.artist?.profile_picture ? (
                 <Avatar
-                  src={user.profile_picture}
+                  src={user.artist.profile_picture}
                   alt={user?.username || 'User'}
                   sx={{ width: 32, height: 32 }}
                 />

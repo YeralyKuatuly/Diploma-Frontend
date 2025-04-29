@@ -4,7 +4,7 @@ import { getArtistById, subscribeToArtist, unsubscribeFromArtist } from "../api"
 import { useAuth } from "../context/AuthContext";
 import "../styles/ArtistDetail.css";
 
-const DEFAULT_PROFILE_PIC = '/default-profile.jpg';
+const DEFAULT_PROFILE_PIC = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg';
 
 const ArtistDetail = () => {
   const { id } = useParams();
