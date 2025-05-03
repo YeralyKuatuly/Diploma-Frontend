@@ -239,6 +239,26 @@ const Profile = () => {
         </div>
       </form>
       
+      {profile && profile.artist && (
+        <div className="artist-actions">
+          <h3>Artist Actions</h3>
+          <div className="artist-buttons">
+            <button 
+              onClick={() => navigate(`/artist/${profile.artist.id}`)} 
+              className="view-artworks-button"
+            >
+              View My Artworks
+            </button>
+            <button 
+              onClick={() => navigate('/add-art')} 
+              className="add-artwork-button"
+            >
+              Add New Artwork
+            </button>
+          </div>
+        </div>
+      )}
+      
       <div className="danger-zone">
         <h3>Danger Zone</h3>
         <button 

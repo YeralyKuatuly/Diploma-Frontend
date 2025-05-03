@@ -377,7 +377,7 @@ export const getUserSubscriptions = async () => {
 export const getCart = async () => {
   try {
     console.log("Fetching cart");
-    const response = await getAuthAxios().get('/cart/');
+    const response = await getAuthAxios().get('/cart/me/');
     console.log("Cart response:", response.data);
     return response.data;
   } catch (error) {

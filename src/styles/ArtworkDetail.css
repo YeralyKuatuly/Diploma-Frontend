@@ -257,12 +257,50 @@
 }
 
 /* 🌟 Responsive Styles */
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .artwork-detail-content {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   
   .artwork-detail-actions {
-    flex-direction: row;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .edit-button, 
+  .delete-button, 
+  .purchase-button, 
+  .contact-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .artwork-detail-title {
+    font-size: 1.5rem;
+  }
+  
+  .artwork-detail-price {
+    font-size: 1.2rem;
+  }
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .artwork-detail-content {
+    grid-template-columns: minmax(300px, 1fr) 1fr;
+  }
+  
+  .artwork-detail-actions {
+    flex-wrap: wrap;
+  }
+  
+  .edit-button, 
+  .delete-button, 
+  .purchase-button, 
+  .contact-button {
+    flex: 0 0 auto;
+    min-width: 140px;
   }
 }

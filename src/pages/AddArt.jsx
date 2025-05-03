@@ -10,6 +10,7 @@ const AddArt = () => {
     description: "",
     price: "",
     image: null,
+    is_available: true  // Set artwork as available by default
   });
   const [artists, setArtists] = useState([]);
   const [error, setError] = useState("");
@@ -82,6 +83,7 @@ const AddArt = () => {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('price', formData.price);
+      formDataToSend.append('is_available', formData.is_available);
       
       if (formData.image) {
         formDataToSend.append('image', formData.image);
