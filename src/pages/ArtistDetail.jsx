@@ -99,6 +99,35 @@ const ArtistDetail = () => {
             </p>
             <p className="artist-profile-bio">{artist.bio || "No bio available"}</p>
             
+            {/* Contact Information Section */}
+            {(artist.telegram || artist.whatsapp || artist.contact_email) && (
+              <div className="artist-contact-info">
+                <h3>Contact Information</h3>
+                <ul className="contact-list">
+                  {artist.telegram && (
+                    <li className="contact-item">
+                      <span className="contact-label">Telegram:</span>
+                      <span className="contact-value">{artist.telegram}</span>
+                    </li>
+                  )}
+                  {artist.whatsapp && (
+                    <li className="contact-item">
+                      <span className="contact-label">WhatsApp:</span>
+                      <span className="contact-value">{artist.whatsapp}</span>
+                    </li>
+                  )}
+                  {artist.contact_email && (
+                    <li className="contact-item">
+                      <span className="contact-label">Email:</span>
+                      <a href={`mailto:${artist.contact_email}`} className="contact-value email-link">
+                        {artist.contact_email}
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+            
             <button 
               className={`subscribe-button ${artist.is_subscribed ? 'subscribed' : ''}`}
               onClick={handleSubscribe}

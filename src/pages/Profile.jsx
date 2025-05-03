@@ -14,7 +14,10 @@ const Profile = () => {
     last_name: '',
     email: '',
     bio: '',
-    profile_picture: null
+    profile_picture: null,
+    telegram: '',
+    whatsapp: '',
+    contact_email: ''
   });
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +41,10 @@ const Profile = () => {
           last_name: data.last_name || '',
           email: data.email || '',
           bio: data.artist?.bio || '',
-          profile_picture: null
+          profile_picture: null,
+          telegram: data.artist?.telegram || '',
+          whatsapp: data.artist?.whatsapp || '',
+          contact_email: data.artist?.contact_email || ''
         });
         
         // Set preview URL from API or default
@@ -103,6 +109,9 @@ const Profile = () => {
       submitData.append('last_name', formData.last_name);
       submitData.append('email', formData.email);
       submitData.append('bio', formData.bio);
+      submitData.append('telegram', formData.telegram);
+      submitData.append('whatsapp', formData.whatsapp);
+      submitData.append('contact_email', formData.contact_email);
       
       // Only append profile picture if it was selected
       if (formData.profile_picture) {
@@ -222,6 +231,39 @@ const Profile = () => {
             value={formData.bio}
             onChange={handleChange}
             rows="4"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="telegram">Telegram</label>
+          <input
+            type="text"
+            id="telegram"
+            name="telegram"
+            value={formData.telegram}
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="whatsapp">WhatsApp</label>
+          <input
+            type="text"
+            id="whatsapp"
+            name="whatsapp"
+            value={formData.whatsapp}
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="contact_email">Contact Email</label>
+          <input
+            type="email"
+            id="contact_email"
+            name="contact_email"
+            value={formData.contact_email}
+            onChange={handleChange}
           />
         </div>
         

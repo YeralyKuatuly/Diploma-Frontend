@@ -26,18 +26,30 @@
 .back-button {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--metallic-light);
+  justify-content: center;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, var(--metallic-secondary), var(--metallic-primary));
   border: none;
-  border-radius: 4px;
-  color: var(--metallic-text-dark);
+  border-radius: 30px;
+  color: white;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  gap: 6px;
+  font-size: 0.95rem;
 }
 
 .back-button:hover {
-  background-color: var(--metallic-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, var(--metallic-secondary), var(--metallic-primary-dark, #304080));
+}
+
+.back-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 /* Specific styling for artwork back button */
@@ -46,10 +58,6 @@
   top: 20px;
   left: 20px;
   z-index: 100;
-  border-radius: 30px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* 🌟 Artwork Detail Content */

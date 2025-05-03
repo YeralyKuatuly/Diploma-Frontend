@@ -35,10 +35,10 @@
   top: 20px;
   left: 20px;
   z-index: 1000;
-  background: linear-gradient(135deg, var(--metallic-secondary, #666), var(--metallic-primary, #333));
-  color: var(--text-color);
+  background: linear-gradient(135deg, var(--metallic-secondary), var(--metallic-primary));
+  color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 30px;
   width: 44px;
   height: 44px;
   font-size: 1.2rem;
@@ -47,13 +47,18 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .back-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, var(--metallic-secondary-dark, #555), var(--metallic-primary-dark, #222));
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, var(--metallic-secondary), var(--metallic-primary-dark, #304080));
+}
+
+.back-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 /* Outer container for the entire slideshow/hero area */
@@ -160,65 +165,27 @@
   max-height: calc(100vh - 200px); /* Account for header, nav, and dots */
   cursor: grab;
   user-select: none;
-  /* Add hint for drag action */
   position: relative;
   /* Optimize for smoother scrolling */
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch; /* Better touch scrolling on iOS */
   will-change: scroll-position; /* Optimize for GPU acceleration */
   overscroll-behavior-x: contain; /* Prevent page back/forward navigation on some browsers */
   touch-action: pan-x; /* Optimize for horizontal panning */
-  /* Fix transition consistency */
-  transition: scroll-behavior 0.3s ease;
-  /* Enhanced GPU acceleration */
-  backface-visibility: hidden;
-  /* Fix for layering and painting issues */
-  isolation: isolate;
 }
 
-.slideshow-container.smooth-scrolling {
+/* For the transition state */
+.slideshow-container.transitioning {
   scroll-snap-type: none;
   scroll-behavior: smooth;
+  pointer-events: none; /* Prevent interactions during transitions */
 }
 
-.slideshow-container.is-active {
-  outline: none;
-}
-
+/* Hide scrollbar */
 .slideshow-container::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+  display: none;
 }
 
-.slideshow-container.dragging {
-  cursor: grabbing;
-  scroll-behavior: auto !important; /* Force disable smooth scrolling during dragging */
-  scroll-snap-type: none;
-  transition: none !important; /* Disable all transitions during drag for maximum responsiveness */
-}
-
-.slideshow-container::after {
-  content: '';
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3Cpolyline points='12 5 19 12 12 19'%3E%3C/polyline%3E%3Cpolyline points='12 5 5 12 12 19'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.6;
-  pointer-events: none;
-  animation: fadeOut 2s 1s forwards;
-}
-
-@keyframes fadeOut {
-  from { opacity: 0.6; }
-  to { opacity: 0; }
-}
-
-/* Improve the slide's appearance and transitions */
+/* Fix slide styling */
 .slideshow-slide {
   flex: 0 0 85%;
   min-width: 85%;
@@ -229,17 +196,31 @@
   align-items: center;
   position: relative;
   opacity: 0.7;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
   padding: 0 10px;
-  will-change: transform, opacity; /* Optimize GPU acceleration */
-  transform-origin: center center;
-  /* Fix to prevent jittery sliding */
-  transform: translateZ(0);
+  transform: scale(0.95);
 }
 
 .slideshow-slide.active {
   opacity: 1;
-  transform: scale(1.02) translateZ(0); /* Subtle scaling for active slide with GPU accel */
+  transform: scale(1);
+}
+
+/* Fix image positioning and rendering */
+.artwork-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+.slideshow-slide.active .artwork-image {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 /* Artwork container + image styling */
@@ -284,50 +265,23 @@
   opacity: 1;
 }
 
-.artwork-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  padding: 1rem;
-  transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-  user-drag: none;
-  -webkit-user-drag: none;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
-
-/* Subtle zoom on hover */
-.artwork-container:hover .artwork-image {
-  transform: scale(1.05);
-}
-
-.artwork-container:hover {
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
-}
-
-/* Artwork title overlay */
+/* Styling for artwork overlay */
 .artwork-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
   color: white;
-  padding: 20px;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;
   opacity: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: center;
-  will-change: transform, opacity;
-  z-index: 2;
+  transition: opacity 0.3s ease;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
-.artwork-container:hover .artwork-overlay {
-  transform: translateY(0);
+.slideshow-slide.active .artwork-overlay,
+.slideshow-slide a:hover .artwork-overlay {
   opacity: 1;
 }
 
@@ -353,64 +307,51 @@
 .slideshow-dots {
   display: flex;
   justify-content: center;
-  margin: 10px 0 20px;
-  gap: 0.5rem;
+  align-items: center;
+  margin: 20px 0;
   flex-wrap: wrap;
-  padding: 0 1rem;
-  position: relative;
-  z-index: 3;
+  gap: 10px;
+  padding: 0 20px;
 }
 
 .dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: var(--metallic-light);
+  background-color: rgba(255, 255, 255, 0.3);
   border: none;
+  margin: 0 5px;
+  padding: 0;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   position: relative;
-  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  overflow: visible;
 }
 
-.dot.active {
-  background-color: var(--metallic-accent);
+.dot:hover {
+  background-color: rgba(255, 255, 255, 0.5);
   transform: scale(1.2);
 }
 
-.dot.active::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
-  opacity: 0;
-  animation: dot-pulse 1.5s ease-out infinite;
+.dot.active {
+  background-color: white;
+  transform: scale(1.2);
 }
 
-@keyframes dot-pulse {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 0.5; }
-  100% { opacity: 0; transform: scale(1.5); }
+.dot:disabled {
+  pointer-events: none;
 }
 
-.dot:hover:not(.active) {
-  background-color: var(--metallic-light-dark);
-  transform: scale(1.1);
-}
-
-.dot:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--metallic-primary);
-}
-
-/* Fix for navigation buttons */
-.nav-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--metallic-accent), 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+/* Make link styling consistent */
+.slideshow-slide a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 /* Loading and error states */
@@ -437,12 +378,41 @@
   }
 }
 
-/* Responsive tweaks */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .slideshow-slide {
-    flex: 0 0 95%;
+    flex: 0 0 100%;
+    min-width: 100%;
   }
-  .artwork-image {
-    max-height: 60vh;
+  
+  .slideshow-container {
+    padding: 0;
+  }
+  
+  .artwork-overlay {
+    opacity: 1;
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+  }
+  
+  .slideshow-nav {
+    padding: 0 10px;
+  }
+  
+  .nav-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slideshow-counter {
+    font-size: 1rem;
+    min-width: 60px;
+  }
+  
+  .slideshow-title {
+    font-size: 1.5rem;
+  }
+  
+  .slideshow-subtitle {
+    font-size: 0.9rem;
   }
 }

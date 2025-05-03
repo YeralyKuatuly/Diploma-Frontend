@@ -58,10 +58,10 @@ const AddArt = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value,
+      [name]: type === 'checkbox' ? checked : files ? files[0] : value,
     }));
   };
 
@@ -188,6 +188,22 @@ const AddArt = () => {
             onChange={handleChange}
             accept="image/*"
           />
+        </div>
+
+        <div className="form-group checkbox-group">
+          <label htmlFor="is_available" className="checkbox-label">
+            <input
+              type="checkbox"
+              id="is_available"
+              name="is_available"
+              checked={formData.is_available}
+              onChange={handleChange}
+            />
+            Available for Purchase
+          </label>
+          <div className="checkbox-hint">
+            When checked, users can add this artwork to their cart and purchase it.
+          </div>
         </div>
 
         <button type="submit" disabled={isLoading || !currentUser}>

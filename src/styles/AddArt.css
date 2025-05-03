@@ -228,7 +228,7 @@
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .checkbox-label {
@@ -243,6 +243,15 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
+  accent-color: var(--metallic-primary);
+}
+
+.checkbox-hint {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--metallic-text-dark);
+  opacity: 0.8;
+  margin-left: 26px;
 }
 
 .availability-hint {

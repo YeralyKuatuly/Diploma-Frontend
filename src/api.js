@@ -395,14 +395,14 @@ export const addToCart = async (artworkId, quantity = 1) => {
     console.log(`Adding artwork ${artworkId} to cart`);
     // Log the request payload for debugging
     const payload = {
-      artwork: artworkId,
+      artwork_id: artworkId,
       quantity: quantity,
     };
     console.log("Request payload:", payload);
-    console.log("Request URL:", `/cart/items/`);
+    console.log("Request URL:", `/cart/add_item/`);
     console.log("Authorization token exists:", !!getAccessToken());
     
-    const response = await getAuthAxios().post('/cart/items/', payload);
+    const response = await getAuthAxios().post('/cart/add_item/', payload);
     console.log("Add to cart response:", response.data);
     return response.data;
   } catch (error) {
@@ -431,10 +431,12 @@ export const updateCartItem = async (itemId, quantity) => {
   }
 };
 
-export const removeFromCart = async (itemId) => {
+export const removeFromCart = async (artworkId) => {
   try {
-    console.log(`Removing item ${itemId} from cart`);
-    const response = await getAuthAxios().delete(`/cart/items/${itemId}/`);
+    console.log(`Removing artwork ${artworkId} from cart`);
+    const response = await getAuthAxios().post('/cart/remove_item/', {
+      artwork_id: artworkId
+    });
     console.log("Remove from cart response:", response.data);
     return response.data;
   } catch (error) {
@@ -449,8 +451,15 @@ export const removeFromCart = async (itemId) => {
 
 export const clearCart = async () => {
   try {
-    await getAuthAxios().delete('/cart/clear/');
+    const response = await getAuthAxios().post('/cart/clear/');
+    console.log("Clear cart response:", response.data);
+    return response.data;
   } catch (error) {
+    console.error("Error clearing cart:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
     throw error.response?.data || { message: 'Failed to clear cart' };
   }
 };
