@@ -521,21 +521,59 @@ const OrderDetail = () => {
                             Kaspi Payment Details
                           </Typography>
                           
-                          {payment.recipient_phone && (
+                          {/* Use either the payment details or get from artist object if available */}
+                          {(payment.recipient_phone || payment.artist?.kaspi_phone) && (
                             <Typography variant="body2" gutterBottom>
-                              Phone Number: <span style={{ fontWeight: 'bold' }}>{payment.recipient_phone}</span>
+                              Phone Number: <span style={{ fontWeight: 'bold' }}>{payment.recipient_phone || payment.artist.kaspi_phone}</span>
                             </Typography>
                           )}
                           
-                          {payment.recipient_card && (
+                          {(payment.recipient_card || payment.artist?.kaspi_card_number) && (
                             <Typography variant="body2" gutterBottom>
-                              Card Number: <span style={{ fontWeight: 'bold' }}>{payment.recipient_card}</span>
+                              Card Number: <span style={{ fontWeight: 'bold' }}>{payment.recipient_card || payment.artist.kaspi_card_number}</span>
                             </Typography>
+                          )}
+                          
+                          {!payment.recipient_phone && !payment.artist?.kaspi_phone && !payment.recipient_card && !payment.artist?.kaspi_card_number && (
+                            <Alert severity="warning" sx={{ mb: 2 }}>
+                              No payment details available. Please contact the artist directly.
+                            </Alert>
                           )}
                           
                           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                             Please use Kaspi mobile app to transfer the exact amount shown above to the artist's account.
                           </Typography>
+                        </Box>
+                        
+                        {/* Artist contact information inside payment section */}
+                        <Box sx={{ mt: 2, p: 2, borderRadius: 1, border: '1px solid #eee' }}>
+                          <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                            Artist Contact Information
+                          </Typography>
+                          
+                          {payment.artist?.telegram && (
+                            <Typography variant="body2" gutterBottom>
+                              Telegram: <span style={{ fontWeight: 'bold' }}>{payment.artist.telegram}</span>
+                            </Typography>
+                          )}
+                          
+                          {payment.artist?.whatsapp && (
+                            <Typography variant="body2" gutterBottom>
+                              WhatsApp: <span style={{ fontWeight: 'bold' }}>{payment.artist.whatsapp}</span>
+                            </Typography>
+                          )}
+                          
+                          {payment.artist?.contact_email && (
+                            <Typography variant="body2" gutterBottom>
+                              Email: <span style={{ fontWeight: 'bold' }}>{payment.artist.contact_email}</span>
+                            </Typography>
+                          )}
+                          
+                          {!payment.artist?.telegram && !payment.artist?.whatsapp && !payment.artist?.contact_email && (
+                            <Typography variant="body2" color="text.secondary">
+                              No contact information available.
+                            </Typography>
+                          )}
                         </Box>
                         
                         {/* Customer guidance */}
