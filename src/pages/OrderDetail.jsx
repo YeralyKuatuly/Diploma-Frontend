@@ -86,7 +86,21 @@ const OrderDetail = () => {
         // Fetch user profile to check if user is an artist
         const profile = await getUserProfile();
         setUserProfile(profile);
-        setIsArtist(profile?.artist !== null);
+        
+        // Check if this user is an artist AND has items in this order
+        // First, check if the user is an artist
+        if (profile?.artist) {
+          // Then check if they have artworks in this order
+          const artistId = profile.artist.id;
+          const artistHasItemsInOrder = orderData.items.some(
+            item => item.artwork.artist.id === artistId
+          );
+          
+          // Only set isArtist to true if they are the artist for some items in this order
+          setIsArtist(artistHasItemsInOrder);
+        } else {
+          setIsArtist(false);
+        }
         
         // If it's a kaspi payment, fetch QR codes
         if (orderData.payment_method === 'kaspi') {
@@ -96,6 +110,8 @@ const OrderDetail = () => {
             setPaymentQRCodes(qrData.payments || []);
           } catch (qrError) {
             console.error('Error loading QR codes:', qrError);
+            // Don't set an error - we'll still show the order without QR codes
+            // Just show an empty payment list with info message
           } finally {
             setLoadingQRCodes(false);
           }

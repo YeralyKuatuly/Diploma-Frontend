@@ -17,7 +17,9 @@ const Profile = () => {
     profile_picture: null,
     telegram: '',
     whatsapp: '',
-    contact_email: ''
+    contact_email: '',
+    kaspi_phone: '',
+    kaspi_card_number: ''
   });
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +46,9 @@ const Profile = () => {
           profile_picture: null,
           telegram: data.artist?.telegram || '',
           whatsapp: data.artist?.whatsapp || '',
-          contact_email: data.artist?.contact_email || ''
+          contact_email: data.artist?.contact_email || '',
+          kaspi_phone: data.artist?.kaspi_phone || '',
+          kaspi_card_number: data.artist?.kaspi_card_number || ''
         });
         
         // Set preview URL from API or default
@@ -112,6 +116,8 @@ const Profile = () => {
       submitData.append('telegram', formData.telegram);
       submitData.append('whatsapp', formData.whatsapp);
       submitData.append('contact_email', formData.contact_email);
+      submitData.append('kaspi_phone', formData.kaspi_phone);
+      submitData.append('kaspi_card_number', formData.kaspi_card_number);
       
       // Only append profile picture if it was selected
       if (formData.profile_picture) {
@@ -266,6 +272,38 @@ const Profile = () => {
             onChange={handleChange}
           />
         </div>
+        
+        {/* Kaspi Payment Details Section */}
+        {profile && profile.artist && (
+          <>
+            <h3 className="section-title">Kaspi Payment Details</h3>
+            <p className="section-description">These details are required to generate QR codes for Kaspi payments</p>
+            
+            <div className="form-group">
+              <label htmlFor="kaspi_phone">Kaspi Phone Number</label>
+              <input
+                type="text"
+                id="kaspi_phone"
+                name="kaspi_phone"
+                value={formData.kaspi_phone}
+                onChange={handleChange}
+                placeholder="Enter your Kaspi phone number"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="kaspi_card_number">Kaspi Card Number</label>
+              <input
+                type="text"
+                id="kaspi_card_number"
+                name="kaspi_card_number"
+                value={formData.kaspi_card_number}
+                onChange={handleChange}
+                placeholder="Enter your Kaspi card number"
+              />
+            </div>
+          </>
+        )}
         
         <div className="form-actions">
           <button type="submit" disabled={isLoading} className="save-button">
