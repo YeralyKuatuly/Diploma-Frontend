@@ -78,19 +78,31 @@ const Cart = () => {
         orderData.pickup_location = pickupLocation;
       }
 
-      const order = await createOrder(orderData);
+      const response = await createOrder(orderData);
       
       // Debug logs to check the order data
-      console.log('Order created with data:', order);
-      console.log('Order ID:', order.id);
+      console.log('Order created with data:', response);
       
-      if (!order || !order.id) {
-        console.error('No order ID returned from the API!');
+      // Handle different response formats
+      let orderID;
+      
+      // If the response has a nested 'order' property (artists missing payment details case)
+      if (response.order && response.order.id) {
+        console.log('Using nested order ID:', response.order.id);
+        orderID = response.order.id;
+      } 
+      // Direct order data case
+      else if (response.id) {
+        console.log('Using direct order ID:', response.id);
+        orderID = response.id;
+      }
+      else {
+        console.error('No order ID found in response');
         setError('Failed to create order - no order ID returned');
         return;
       }
 
-      navigate(`/orders/${order.id}`);
+      navigate(`/orders/${orderID}`);
     } catch (err) {
       console.error('Error creating order:', err);
       setError(err.response?.data?.detail || 'Failed to create order');
