@@ -79,6 +79,17 @@ const Cart = () => {
       }
 
       const order = await createOrder(orderData);
+      
+      // Debug logs to check the order data
+      console.log('Order created with data:', order);
+      console.log('Order ID:', order.id);
+      
+      if (!order || !order.id) {
+        console.error('No order ID returned from the API!');
+        setError('Failed to create order - no order ID returned');
+        return;
+      }
+
       navigate(`/orders/${order.id}`);
     } catch (err) {
       console.error('Error creating order:', err);
