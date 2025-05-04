@@ -53,6 +53,14 @@ const DELIVERY_STATUS = {
   delivered: 'Delivered',
 };
 
+// Map of payment status codes to display colors
+const PAYMENT_STATUS = {
+  pending: 'Awaiting Payment',
+  completed: 'Payment Completed',
+  failed: 'Payment Failed',
+  expired: 'Payment Expired',
+};
+
 const OrderDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -102,16 +110,21 @@ const OrderDetail = () => {
           setIsArtist(false);
         }
         
-        // If it's a kaspi payment, fetch QR codes
+        // If it's a kaspi payment, fetch payment details
         if (orderData.payment_method === 'kaspi') {
           try {
             setLoadingQRCodes(true);
-            const qrData = await getPaymentQRCodes(id);
-            setPaymentQRCodes(qrData.payments || []);
-          } catch (qrError) {
-            console.error('Error loading QR codes:', qrError);
-            // Don't set an error - we'll still show the order without QR codes
-            // Just show an empty payment list with info message
+            try {
+              const qrData = await getPaymentQRCodes(id);
+              setPaymentQRCodes(qrData.payments || []);
+            } catch (qrError) {
+              console.error('Error loading payment details:', qrError);
+              // If no payment details are available, set to empty array
+              setPaymentQRCodes([]);
+              
+              // We'll still continue since we can show the order without payment details
+              console.log('Continuing without payment details');
+            }
           } finally {
             setLoadingQRCodes(false);
           }
@@ -350,38 +363,72 @@ const OrderDetail = () => {
               
               {/* Artist Actions */}
               {isArtist && (
-                <Box mt={3}>
-                  <Divider sx={{ my: 2 }} />
-                  <Typography variant="h6" gutterBottom>Artist Actions</Typography>
-                  
-                  <Grid container spacing={2}>
-                    {order.order_type === 'pickup' && (
-                      <Grid item xs={12} sm={6}>
+                <Card sx={{ mt: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>Artist Actions</Typography>
+                    
+                    <Alert severity="info" sx={{ mb: 2 }}>
+                      As an artist, you can update the order status after receiving payment.
+                    </Alert>
+                    
+                    <Grid container spacing={2}>
+                      {order.order_type === 'pickup' && (
+                        <Grid item xs={12}>
+                          <Button 
+                            variant="contained" 
+                            color="primary" 
+                            fullWidth
+                            onClick={() => openDialog('pickup')}
+                            disabled={action.loading || order.status === 'cancelled'}
+                            startIcon={<span role="img" aria-label="location">📍</span>}
+                          >
+                            {order.pickup_location ? 'Update Pickup Location' : 'Set Pickup Location'}
+                          </Button>
+                        </Grid>
+                      )}
+                      
+                      <Grid item xs={12}>
                         <Button 
                           variant="contained" 
-                          color="primary" 
+                          color="secondary" 
                           fullWidth
-                          onClick={() => openDialog('pickup')}
+                          onClick={() => openDialog('delivery')}
                           disabled={action.loading || order.status === 'cancelled'}
+                          startIcon={<span role="img" aria-label="delivery">📦</span>}
                         >
-                          {order.pickup_location ? 'Update Pickup Location' : 'Set Pickup Location'}
+                          Update Delivery Status
                         </Button>
                       </Grid>
-                    )}
-                    
-                    <Grid item xs={12} sm={6}>
-                      <Button 
-                        variant="contained" 
-                        color="secondary" 
-                        fullWidth
-                        onClick={() => openDialog('delivery')}
-                        disabled={action.loading || order.status === 'cancelled'}
-                      >
-                        Update Delivery Status
-                      </Button>
+                      
+                      {order.payment_method === 'kaspi' && 
+                        paymentQRCodes.filter(p => 
+                          p.artist.id === userProfile?.artist?.id && 
+                          p.status !== 'completed'
+                        ).map(payment => (
+                          <Grid item xs={12} key={payment.id}>
+                            <Button 
+                              variant="contained" 
+                              color="success" 
+                              fullWidth
+                              onClick={() => handleCompletePayment(payment.id)}
+                              disabled={action.loading}
+                              startIcon={<span role="img" aria-label="money">💰</span>}
+                            >
+                              Mark Payment as Received
+                            </Button>
+                            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block', textAlign: 'center' }}>
+                              Amount: ${payment.amount}
+                            </Typography>
+                          </Grid>
+                        ))
+                      }
                     </Grid>
-                  </Grid>
-                </Box>
+                    
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 3 }}>
+                      Remember to update the delivery status regularly to keep your customer informed.
+                    </Typography>
+                  </CardContent>
+                </Card>
               )}
               
               {/* Customer Actions */}
@@ -446,7 +493,7 @@ const OrderDetail = () => {
           {order.payment_method === 'kaspi' && (
             <Card>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Kaspi Payments</Typography>
+                <Typography variant="h6" gutterBottom>Payment Information</Typography>
                 
                 {loadingQRCodes ? (
                   <Box display="flex" justifyContent="center" p={3}>
@@ -464,48 +511,127 @@ const OrderDetail = () => {
                           Amount: ${payment.amount}
                         </Typography>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                          Status: {payment.status.toUpperCase()}
+                          Status: {PAYMENT_STATUS[payment.status] || payment.status.toUpperCase()}
                         </Typography>
                         
-                        {payment.qr_code_url ? (
-                          <Box textAlign="center" mt={2} mb={2}>
-                            <img 
-                              src={payment.qr_code_url} 
-                              alt="Kaspi QR Code" 
-                              style={{ 
-                                maxWidth: '100%', 
-                                height: 'auto',
-                                border: '1px solid #eee',
-                                borderRadius: '4px',
-                              }}
-                            />
-                          </Box>
-                        ) : (
-                          <Alert severity="warning" sx={{ mt: 2 }}>
-                            QR code not available
+                        <Divider sx={{ my: 2 }} />
+                        
+                        <Box sx={{ bgcolor: '#f5f5f5', p: 2, borderRadius: 1 }}>
+                          <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                            Kaspi Payment Details
+                          </Typography>
+                          
+                          {payment.recipient_phone && (
+                            <Typography variant="body2" gutterBottom>
+                              Phone Number: <span style={{ fontWeight: 'bold' }}>{payment.recipient_phone}</span>
+                            </Typography>
+                          )}
+                          
+                          {payment.recipient_card && (
+                            <Typography variant="body2" gutterBottom>
+                              Card Number: <span style={{ fontWeight: 'bold' }}>{payment.recipient_card}</span>
+                            </Typography>
+                          )}
+                          
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                            Please use Kaspi mobile app to transfer the exact amount shown above to the artist's account.
+                          </Typography>
+                        </Box>
+                        
+                        {/* Customer guidance */}
+                        {!isArtist && payment.status !== 'completed' && (
+                          <Alert severity="info" sx={{ mt: 2 }}>
+                            After completing your Kaspi payment, the artist will update the order status.
                           </Alert>
                         )}
-                        
-                        {payment.status !== 'completed' && isArtist && (
-                          <Button 
-                            variant="contained" 
-                            color="primary" 
-                            fullWidth
-                            onClick={() => handleCompletePayment(payment.id)}
-                            disabled={action.loading}
-                            sx={{ mt: 2 }}
-                          >
-                            Mark as Paid
-                          </Button>
+
+                        {/* If payment is completed, show success message */}
+                        {payment.status === 'completed' && (
+                          <Alert severity="success" sx={{ mt: 2 }}>
+                            Payment completed. Thank you!
+                          </Alert>
                         )}
                       </Paper>
                     ))}
                   </List>
                 ) : (
                   <Alert severity="info">
-                    No payment details available. Please contact support if you believe this is an error.
+                    No payment details available. Please contact the artist directly.
                   </Alert>
                 )}
+              </CardContent>
+            </Card>
+          )}
+          
+          {order.payment_method === 'cash' && (
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>Cash Payment</Typography>
+                <Alert severity="info">
+                  {order.order_type === 'pickup' 
+                    ? 'Please pay in cash when you pick up your items.'
+                    : 'Please pay in cash upon delivery.'}
+                </Alert>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Artist Contact Information */}
+          {!isArtist && (
+            <Card sx={{ mt: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>Artist Contact Information</Typography>
+                
+                {/* Group items by artist and show contact info */}
+                {Object.values(
+                  order.items.reduce((acc, item) => {
+                    const artistId = item.artwork.artist.id;
+                    if (!acc[artistId]) {
+                      acc[artistId] = {
+                        artist: item.artwork.artist,
+                        items: []
+                      };
+                    }
+                    acc[artistId].items.push(item);
+                    return acc;
+                  }, {})
+                ).map(({ artist, items }) => (
+                  <Box key={artist.id} sx={{ mb: 3, pb: 2, borderBottom: '1px solid #eee' }}>
+                    <Typography variant="subtitle1" gutterBottom>
+                      {artist.name} ({items.length} item{items.length > 1 ? 's' : ''})
+                    </Typography>
+                    
+                    <Box sx={{ ml: 2, mt: 1 }}>
+                      {artist.contact_email && (
+                        <Typography variant="body2" gutterBottom>
+                          <strong>Email:</strong> {artist.contact_email}
+                        </Typography>
+                      )}
+                      
+                      {artist.telegram && (
+                        <Typography variant="body2" gutterBottom>
+                          <strong>Telegram:</strong> {artist.telegram}
+                        </Typography>
+                      )}
+                      
+                      {artist.whatsapp && (
+                        <Typography variant="body2" gutterBottom>
+                          <strong>WhatsApp:</strong> {artist.whatsapp}
+                        </Typography>
+                      )}
+                      
+                      {!artist.contact_email && !artist.telegram && !artist.whatsapp && (
+                        <Typography variant="body2" color="text.secondary">
+                          No contact information available.
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                ))}
+                
+                <Alert severity="info" sx={{ mt: 2 }}>
+                  If you have any questions about your order, please contact the artists directly using the information above.
+                </Alert>
               </CardContent>
             </Card>
           )}
