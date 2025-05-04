@@ -20,6 +20,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Cart from './components/Cart';
 import Order from './components/Order';
 import './styles/base.css';
+import OrderDetail from './pages/OrderDetail';
 
 // Paths where header and footer should be hidden
 const hiddenComponentPaths = ['/slideshow'];
@@ -87,7 +88,7 @@ const AppContent = () => {
                         } 
                     />
                     <Route path="/cart" element={<Cart />} />
-                    <Route path="/orders/:orderId" element={<Order />} />
+                    <Route path="/orders/:id" element={<OrderDetail />} />
                 </Routes>
             </main>
             <FooterWrapper />
