@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { registerUser, API_URL } from "../api";
 import "../styles/Register.css";
 
@@ -17,6 +17,10 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [effectiveApiUrl, setEffectiveApiUrl] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get returnUrl from location state
+  const returnUrl = location.state?.returnUrl || "/";
 
   // Set the effective API URL once on mount
   useEffect(() => {
@@ -52,8 +56,13 @@ const Register = () => {
       
       await registerUser(data);
       
-      // Redirect to login page with success message
-      navigate("/login", { state: { message: "Registration successful! Please log in." } });
+      // Redirect to login page with success message and returnUrl
+      navigate("/login", { 
+        state: { 
+          message: "Registration successful! Please log in.",
+          returnUrl: returnUrl
+        } 
+      });
     } catch (err) {
       console.error("Registration error:", err);
       
@@ -85,6 +94,11 @@ const Register = () => {
         <h2>Create an Account</h2>
         
         {error && <div className="error-message">{error}</div>}
+        {returnUrl !== "/" && (
+          <div className="info-message">
+            Register to continue to your destination
+          </div>
+        )}
         
         <form onSubmit={handleSubmit} className="register-form">
           <div className="form-group">
@@ -145,7 +159,7 @@ const Register = () => {
         </form>
         
         <div className="login-link">
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login" state={{ returnUrl }}>Login</Link>
         </div>
       </div>
     </div>

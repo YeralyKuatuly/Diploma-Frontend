@@ -30,9 +30,20 @@ const Cart = () => {
   const [paymentMethod, setPaymentMethod] = useState('kaspi');
   const [pickupLocation, setPickupLocation] = useState('');
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    fetchCart();
+    // Check if user is authenticated
+    const token = localStorage.getItem('accessToken');
+    setIsAuthenticated(!!token);
+    
+    if (token) {
+      // Only fetch cart if authenticated
+      fetchCart();
+    } else {
+      // For unauthenticated users, show empty cart
+      setLoading(false);
+    }
   }, []);
 
   const fetchCart = async () => {
@@ -58,6 +69,13 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
+    // Check if the user is authenticated before proceeding
+    if (!isAuthenticated) {
+      // Redirect to login with a return URL
+      navigate('/login', { state: { returnUrl: '/cart' } });
+      return;
+    }
+    
     try {
       // Validate fields based on order type
       if (orderType === 'delivery' && !shippingAddress) {
@@ -125,21 +143,35 @@ const Cart = () => {
     );
   }
 
-  if (!cart || !cart.items || cart.items.length === 0) {
+  // Show empty cart for unauthenticated users or if cart is empty
+  if (!isAuthenticated || !cart || !cart.items || cart.items.length === 0) {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" minHeight="60vh">
         <ShoppingCartIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
         <Typography variant="h6" color="text.secondary">
-          Your cart is empty
+          {!isAuthenticated 
+            ? "Please log in to view your cart" 
+            : "Your cart is empty"}
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigate('/artworks')}
-          sx={{ mt: 2 }}
-        >
-          Browse Artworks
-        </Button>
+        <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate('/')}
+          >
+            Browse Artworks
+          </Button>
+          
+          {!isAuthenticated && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate('/login', { state: { returnUrl: '/cart' } })}
+            >
+              Log In
+            </Button>
+          )}
+        </Box>
       </Box>
     );
   }

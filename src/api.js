@@ -71,11 +71,12 @@ export const createAuthAxios = () => {
           originalRequest.headers.Authorization = `Bearer ${access}`;
           return instance(originalRequest);
         } catch (refreshError) {
-          // If refresh fails, clear tokens and redirect to login
+          // If refresh fails, clear tokens but don't redirect automatically
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
-          window.location.href = '/login';
-          return Promise.reject(refreshError);
+          
+          // Let the calling component handle the error instead of redirecting
+          return Promise.reject(error);
         }
       }
 
@@ -131,7 +132,7 @@ export const loginUser = async (username, password) => {
   }
 };
 
-export const logoutUser = async () => {
+export const logoutUser = async (redirectToLogin = true) => {
   try {
     const refreshToken = getRefreshToken();
     if (refreshToken) {
@@ -142,7 +143,9 @@ export const logoutUser = async () => {
   } finally {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/login';
+    if (redirectToLogin) {
+      window.location.href = '/login';
+    }
   }
 };
 

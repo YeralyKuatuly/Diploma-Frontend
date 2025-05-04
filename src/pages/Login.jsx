@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { loginUser } from "../api";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
@@ -10,7 +10,11 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
+  
+  // Get the return URL from location state, default to home page
+  const returnUrl = location.state?.returnUrl || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +24,9 @@ const Login = () => {
     try {
       // Call the login function from AuthContext
       await login(username, password);
-      navigate("/");
+      
+      // Redirect to the return URL
+      navigate(returnUrl);
     } catch (err) {
       console.error("Login error:", err);
       setError(
@@ -37,6 +43,11 @@ const Login = () => {
       <div className="login-form-container">
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
+        {returnUrl !== "/" && (
+          <div className="info-message">
+            Please log in to continue to your destination
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="username">Username</label>
@@ -63,7 +74,7 @@ const Login = () => {
           </button>
         </form>
         <div className="register-link">
-          Don't have an account? <Link to="/register">Register</Link>
+          Don't have an account? <Link to="/register" state={{ returnUrl }}>Register</Link>
         </div>
       </div>
     </div>

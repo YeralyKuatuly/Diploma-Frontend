@@ -19,6 +19,7 @@ import EditArtwork from "./pages/EditArtwork";
 import PrivateRoute from "./components/PrivateRoute";
 import Cart from './components/Cart';
 import Order from './components/Order';
+import Orders from './pages/Orders';
 import './styles/base.css';
 import OrderDetail from './pages/OrderDetail';
 
@@ -56,6 +57,7 @@ const AppContent = () => {
                 <Routes>
                     <Route path="/" element={<Gallery />} />
                     <Route path="/gallery" element={<Gallery />} />
+                    <Route path="/artworks" element={<Gallery />} />
                     <Route path="/artists" element={<Artists />} />
                     <Route path="/artist/:id" element={<ArtistDetail />} />
                     <Route path="/add-art" element={<AddArt />} />
@@ -88,6 +90,14 @@ const AppContent = () => {
                         } 
                     />
                     <Route path="/cart" element={<Cart />} />
+                    <Route 
+                        path="/orders"
+                        element={
+                            <PrivateRoute>
+                                <Orders />
+                            </PrivateRoute>
+                        } 
+                    />
                     <Route path="/orders/:id" element={<OrderDetail />} />
                 </Routes>
             </main>

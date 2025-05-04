@@ -53,8 +53,8 @@ const ArtworkDetail = () => {
 
   const handlePurchase = async () => {
     if (!userProfile) {
-      // User is not logged in, redirect to login
-      navigate('/login');
+      // User is not logged in, redirect to login with return URL
+      navigate('/login', { state: { returnUrl: `/artwork/${id}` } });
       return;
     }
     
@@ -86,7 +86,7 @@ const ArtworkDetail = () => {
       if (err.response) {
         if (err.response.status === 401) {
           setPurchaseMessage("Please log in to add items to your cart.");
-          setTimeout(() => navigate('/login'), 2000);
+          setTimeout(() => navigate('/login', { state: { returnUrl: `/artwork/${id}` } }), 2000);
         } else if (err.response.data && err.response.data.detail) {
           // Handle the "already in cart" message
           if (err.response.data.detail === "This artwork is already in your cart") {
