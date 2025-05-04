@@ -73,8 +73,37 @@ const Gallery = () => {
 
     return (
         <div className="gallery-container">
+            {/* Hero Section */}
+            <div className="gallery-hero">
+                <div className="hero-content">
+                    <h1 className="hero-title">Welcome to Our Art Marketplace</h1>
+                    <p className="hero-description">
+                        Discover unique artworks from talented artists around the world. 
+                        Our curated collection features original pieces that bring beauty and inspiration to your space.
+                    </p>
+                    <div className="hero-actions">
+                        <Link to="/artists" className="hero-button primary">Discover Artists</Link>
+                        <Link to="/slideshow" className="hero-button secondary">View Slideshow</Link>
+                    </div>
+                </div>
+                <div className="featured-stats">
+                    <div className="stat-item">
+                        <span className="stat-number">{artworks.length}</span>
+                        <span className="stat-label">Artworks</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-number">{Array.from(new Set(artworks.map(art => art.artist.id))).length}</span>
+                        <span className="stat-label">Artists</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-number">24/7</span>
+                        <span className="stat-label">Support</span>
+                    </div>
+                </div>
+            </div>
+            
             <div className="gallery-header">
-                <h1>Art Gallery</h1>
+                <h2>Browse Gallery</h2>
                 <div className="filter-container">
                     <input 
                         type="text" 
