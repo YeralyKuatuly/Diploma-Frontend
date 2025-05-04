@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getArtworks } from "../api";
 import "../styles/ArtSlideshow.css";
@@ -8,8 +8,6 @@ const ArtSlideshow = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const slideshowRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,53 +47,24 @@ const ArtSlideshow = () => {
     navigate(-1); // Go back to previous page
   };
 
-  // Improved slide navigation that works reliably
-  const goToSlide = (index) => {
-    if (isTransitioning || !slideshowRef.current) return;
-    
-    // Ensure index is within bounds
-    const boundedIndex = Math.max(0, Math.min(index, artworks.length - 1));
-    
-    // Only proceed if we're changing slides
-    if (boundedIndex === currentIndex) return;
-    
-    setIsTransitioning(true);
-    setCurrentIndex(boundedIndex);
-    
-    const slideWidth = slideshowRef.current.clientWidth * 0.85;
-    slideshowRef.current.scrollTo({
-      left: boundedIndex * slideWidth,
-      behavior: "smooth"
-    });
-    
-    // Reset transitioning state after animation completes
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 500); // Animation duration
-  };
-
-  // Handle manual scroll events
-  const handleScroll = () => {
-    if (!slideshowRef.current || isTransitioning) return;
-    
-    const container = slideshowRef.current;
-    const slideWidth = container.clientWidth * 0.85;
-    const newIndex = Math.round(container.scrollLeft / slideWidth);
-    
-    if (newIndex !== currentIndex) {
-      setCurrentIndex(newIndex);
+  // Simple navigation functions
+  const goToNextSlide = () => {
+    if (currentIndex < artworks.length - 1) {
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
-  // Handler for navigation buttons
-  const handleNavigation = (direction) => {
-    const newIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
-    goToSlide(newIndex);
+  const goToPrevSlide = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
   };
 
   // Jump directly to a specific slide (for dot navigation)
   const jumpToSlide = (index) => {
-    goToSlide(index);
+    if (index >= 0 && index < artworks.length) {
+      setCurrentIndex(index);
+    }
   };
 
   if (loading) {
@@ -136,8 +105,8 @@ const ArtSlideshow = () => {
         <div className="slideshow-nav">
           <button 
             className="nav-button prev" 
-            onClick={() => handleNavigation("left")} 
-            disabled={currentIndex === 0 || isTransitioning}
+            onClick={goToPrevSlide} 
+            disabled={currentIndex === 0}
             aria-label="Previous artwork"
           >
             ←
@@ -147,40 +116,31 @@ const ArtSlideshow = () => {
           </div>
           <button 
             className="nav-button next" 
-            onClick={() => handleNavigation("right")} 
-            disabled={currentIndex === artworks.length - 1 || isTransitioning}
+            onClick={goToNextSlide} 
+            disabled={currentIndex === artworks.length - 1}
             aria-label="Next artwork"
           >
             →
           </button>
         </div>
 
-        <div
-          className={`slideshow-container ${isTransitioning ? 'transitioning' : ''}`}
-          ref={slideshowRef}
-          onScroll={handleScroll}
-        >
-          {artworks.map((artwork, index) => (
-            <div
-              key={artwork.id}
-              className={`slideshow-slide ${index === currentIndex ? "active" : ""}`}
-            >
-              <Link to={`/artwork/${artwork.id}`}>
+        <div className="slideshow-simple-container">
+          {artworks.length > 0 && (
+            <div className="slideshow-slide active">
+              <Link to={`/artwork/${artworks[currentIndex].id}`}>
                 <img
-                  src={artwork.image}
-                  alt={artwork.title}
+                  src={artworks[currentIndex].image}
+                  alt={artworks[currentIndex].title}
                   className="artwork-image"
                   onError={(e) => (e.target.src = "/placeholder-image.jpg")}
-                  draggable={false}
-                  loading={index === 0 || index === currentIndex || index === currentIndex + 1 ? "eager" : "lazy"}
                 />
                 <div className="artwork-overlay">
-                  <h3>{artwork.title}</h3>
-                  <p>By {artwork.artist.name}</p>
+                  <h3>{artworks[currentIndex].title}</h3>
+                  <p>By {artworks[currentIndex].artist.name}</p>
                 </div>
               </Link>
             </div>
-          ))}
+          )}
         </div>
 
         <div className="slideshow-dots">
@@ -189,7 +149,6 @@ const ArtSlideshow = () => {
               key={index}
               className={`dot ${index === currentIndex ? "active" : ""}`}
               onClick={() => jumpToSlide(index)}
-              disabled={isTransitioning}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

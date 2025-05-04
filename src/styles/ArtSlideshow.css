@@ -98,6 +98,51 @@
   font-size: 1rem;
 }
 
+/* Simple container for the new slideshow */
+.slideshow-simple-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85%;
+  max-height: calc(100vh - 200px); /* Account for header, nav, and dots */
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Fix slide styling */
+.slideshow-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(0.95);
+}
+
+.slideshow-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Fix image positioning and rendering */
+.artwork-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.slideshow-slide.active .artwork-image {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
 /* Navigation controls (prev/next buttons + counter) */
 .slideshow-nav {
   display: flex;
@@ -152,120 +197,7 @@
   justify-content: center;
 }
 
-/* The horizontal scrolling container */
-.slideshow-container {
-  flex: 1;
-  display: flex;
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
-  scrollbar-width: none;  /* Hide scrollbar for Firefox */
-  padding: 0 7.5%;
-  margin: 0 auto;
-  max-height: calc(100vh - 200px); /* Account for header, nav, and dots */
-  cursor: grab;
-  user-select: none;
-  position: relative;
-  /* Optimize for smoother scrolling */
-  -webkit-overflow-scrolling: touch; /* Better touch scrolling on iOS */
-  will-change: scroll-position; /* Optimize for GPU acceleration */
-  overscroll-behavior-x: contain; /* Prevent page back/forward navigation on some browsers */
-  touch-action: pan-x; /* Optimize for horizontal panning */
-}
-
-/* For the transition state */
-.slideshow-container.transitioning {
-  scroll-snap-type: none;
-  scroll-behavior: smooth;
-  pointer-events: none; /* Prevent interactions during transitions */
-}
-
-/* Hide scrollbar */
-.slideshow-container::-webkit-scrollbar {
-  display: none;
-}
-
-/* Fix slide styling */
-.slideshow-slide {
-  flex: 0 0 85%;
-  min-width: 85%;
-  height: 100%;
-  scroll-snap-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  opacity: 0.7;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  padding: 0 10px;
-  transform: scale(0.95);
-}
-
-.slideshow-slide.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Fix image positioning and rendering */
-.artwork-image {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  transform: translateZ(0); /* Force GPU acceleration */
-}
-
-.slideshow-slide.active .artwork-image {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
-/* Artwork container + image styling */
-.artwork-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  will-change: transform, box-shadow; /* Optimize for animation */
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  /* Fix to prevent jittery sliding */
-  transform: translateZ(0);
-}
-
-.artwork-container a {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  outline: none;
-}
-
-.artwork-container a:focus {
-  outline: 2px solid var(--metallic-primary);
-  outline-offset: -2px;
-  border-radius: 6px;
-}
-
-.artwork-container a:focus .artwork-overlay {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-/* Styling for artwork overlay */
+/* Artwork overlay */
 .artwork-overlay {
   position: absolute;
   bottom: 0;
@@ -298,9 +230,17 @@
   opacity: 0.9;
 }
 
-/* Remove the artwork-info related styles since we don't need them anymore */
-.artwork-info {
-  display: none;
+/* Link styling */
+.slideshow-slide a {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Dots / Pagination */
@@ -338,22 +278,6 @@
   transform: scale(1.2);
 }
 
-.dot:disabled {
-  pointer-events: none;
-}
-
-/* Make link styling consistent */
-.slideshow-slide a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
 /* Loading and error states */
 .slideshow-loading {
   display: flex;
@@ -380,22 +304,14 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .slideshow-slide {
-    flex: 0 0 100%;
-    min-width: 100%;
-  }
-  
-  .slideshow-container {
-    padding: 0;
+  .slideshow-simple-container {
+    width: 100%;
+    padding: 0 20px;
   }
   
   .artwork-overlay {
     opacity: 1;
     background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
-  }
-  
-  .slideshow-nav {
-    padding: 0 10px;
   }
   
   .nav-button {
