@@ -132,6 +132,28 @@ export const loginUser = async (username, password) => {
   }
 };
 
+export const forgotPassword = async (email) => {
+  try {
+    const response = await plainAxios.post('/auth/password-reset/', { email });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resetPassword = async (uidb64, token, password) => {
+  try {
+    const response = await plainAxios.post('/auth/password-reset-confirm/', {
+      uidb64,
+      token,
+      password
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const logoutUser = async (redirectToLogin = true) => {
   try {
     const refreshToken = getRefreshToken();

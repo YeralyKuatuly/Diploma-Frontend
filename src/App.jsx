@@ -5,6 +5,8 @@ import Artists from "./pages/Artists";
 import AddArt from "./pages/AddArt";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import ArtworkDetail from "./pages/ArtworkDetail";
 import ArtistDetail from "./pages/ArtistDetail";
 import Profile from "./pages/Profile";
@@ -99,6 +101,8 @@ const AppContent = () => {
                         } 
                     />
                     <Route path="/orders/:id" element={<OrderDetail />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
                 </Routes>
             </main>
             <FooterWrapper />
