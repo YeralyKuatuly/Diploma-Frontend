@@ -134,9 +134,20 @@ export const loginUser = async (username, password) => {
 
 export const forgotPassword = async (email) => {
   try {
-    const response = await plainAxios.post('/auth/password-reset/', { email });
+    const response = await plainAxios.post('/auth/password-reset/', 
+      { email },
+      { 
+        timeout: 15000  // 15 seconds timeout
+      }
+    );
     return response.data;
   } catch (error) {
+    // Provide a more user-friendly error if it's a timeout
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout') || 
+        (error.response && error.response.status === 504)) {
+      console.error('Password reset request timed out');
+      throw new Error('Server is taking too long to respond. Please try again later.');
+    }
     throw error;
   }
 };

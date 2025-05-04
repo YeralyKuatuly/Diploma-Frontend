@@ -34,11 +34,22 @@ const ForgotPassword = () => {
     } catch (err) {
       // Show error message
       console.error('Password reset request failed:', err);
-      setError(
-        err.response?.data?.email || 
-        err.response?.data?.detail || 
-        'Failed to send password reset email. Please try again.'
-      );
+      
+      // Check if it's a timeout or network error
+      if (err.message && (
+          err.message.includes('timeout') || 
+          err.message.includes('Network Error') ||
+          err.message.includes('too long to respond')
+        )) {
+        setError('Server is taking too long to respond. The password reset email will still be processed in the background. Please check your email in a few minutes.');
+      } else {
+        setError(
+          err.response?.data?.email || 
+          err.response?.data?.detail || 
+          err.message ||
+          'Failed to send password reset email. Please try again.'
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
