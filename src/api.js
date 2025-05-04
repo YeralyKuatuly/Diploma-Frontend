@@ -497,12 +497,10 @@ export const getOrderById = async (orderId) => {
   }
 };
 
-export const createOrder = async (shippingAddress) => {
+export const createOrder = async (orderData) => {
   try {
-    console.log("Creating order with shipping address:", shippingAddress);
-    const response = await getAuthAxios().post('/orders/', {
-      shipping_address: shippingAddress
-    });
+    console.log("Creating order with data:", orderData);
+    const response = await getAuthAxios().post('/orders/', orderData);
     console.log("Create order response:", response.data);
     return response.data;
   } catch (error) {
@@ -523,6 +521,106 @@ export const cancelOrder = async (orderId) => {
     return response.data;
   } catch (error) {
     console.error(`Error cancelling order ${orderId}:`, error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+// New functions for Kaspi payments and delivery
+
+export const getPaymentQRCodes = async (orderId) => {
+  try {
+    console.log(`Fetching payment QR codes for order ${orderId}`);
+    const response = await getAuthAxios().get(`/orders/${orderId}/payment-qr-codes/`);
+    console.log("Payment QR codes response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching payment QR codes for order ${orderId}:`, error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const completePayment = async (orderId, paymentId) => {
+  try {
+    console.log(`Completing payment ${paymentId} for order ${orderId}`);
+    const response = await getAuthAxios().post(`/orders/${orderId}/complete-payment/${paymentId}/`);
+    console.log("Complete payment response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error completing payment for order ${orderId}:`, error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+// Artist order management functions
+export const getArtistOrders = async (filters = {}) => {
+  try {
+    console.log("Fetching artist orders with filters:", filters);
+    
+    // Build query string from filters
+    const queryParams = new URLSearchParams();
+    if (filters.delivery_status) {
+      queryParams.append('delivery_status', filters.delivery_status);
+    }
+    if (filters.order_type) {
+      queryParams.append('order_type', filters.order_type);
+    }
+    
+    const queryString = queryParams.toString();
+    const url = `/orders/artist-orders/${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await getAuthAxios().get(url);
+    console.log("Artist orders response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching artist orders:", error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const updateDeliveryStatus = async (orderId, deliveryStatus) => {
+  try {
+    console.log(`Updating delivery status for order ${orderId} to ${deliveryStatus}`);
+    const response = await getAuthAxios().post(`/orders/${orderId}/update-delivery-status/`, {
+      delivery_status: deliveryStatus
+    });
+    console.log("Update delivery status response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating delivery status for order ${orderId}:`, error);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+export const updatePickupLocation = async (orderId, pickupLocation) => {
+  try {
+    console.log(`Updating pickup location for order ${orderId}`);
+    const response = await getAuthAxios().post(`/orders/${orderId}/update-pickup-location/`, {
+      pickup_location: pickupLocation
+    });
+    console.log("Update pickup location response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating pickup location for order ${orderId}:`, error);
     if (error.response) {
       console.error("Response status:", error.response.status);
       console.error("Response data:", error.response.data);
