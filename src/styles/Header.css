@@ -1,11 +1,11 @@
 :root {
-    --metallic-primary: #3D52A0;  /* Deep Royal Blue */
-    --metallic-secondary: #7091E6;  /* Soft Blue */
-    --metallic-accent: #8697C4;  /* Cool Slate */
-    --metallic-light: #ADBBDA;  /* Muted Silver */
-    --metallic-background: #EDE8F5;  /* Platinum Mist */
-    --metallic-text-dark: #000000;  /* Changed to black for better contrast */
-    --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+    --metallic-primary: #000000;  /* Black */
+    --metallic-secondary: #666666;  /* Dark Gray */
+    --metallic-accent: #D9D9D9;  /* Light Gray */
+    --metallic-light: #D9D9D9;  /* Light Gray */
+    --metallic-background: #ffffff;  /* White */
+    --metallic-text-dark: #000000;  /* Black */
+    --metallic-text-light: #ffffff;  /* White */
 }
 
 .header {

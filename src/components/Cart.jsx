@@ -39,7 +39,7 @@ const Cart = () => {
     
     if (token) {
       // Only fetch cart if authenticated
-      fetchCart();
+    fetchCart();
     } else {
       // For unauthenticated users, show empty cart
       setLoading(false);
@@ -154,13 +154,13 @@ const Cart = () => {
             : "Your cart is empty"}
         </Typography>
         <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-          <Button
-            variant="contained"
-            color="primary"
+        <Button
+          variant="contained"
+          color="primary"
             onClick={() => navigate('/')}
-          >
-            Browse Artworks
-          </Button>
+        >
+          Browse Artworks
+        </Button>
           
           {!isAuthenticated && (
             <Button
@@ -245,14 +245,14 @@ const Cart = () => {
               </FormControl>
               
               {orderType === 'delivery' ? (
-                <TextField
-                  fullWidth
+              <TextField
+                fullWidth
                   required
-                  multiline
+                multiline
                   rows={3}
-                  label="Shipping Address"
-                  value={shippingAddress}
-                  onChange={(e) => setShippingAddress(e.target.value)}
+                label="Shipping Address"
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
                   sx={{ mb: 2 }}
                   error={!shippingAddress && error?.includes('shipping address')}
                   helperText={!shippingAddress && error?.includes('shipping address') ? 'Shipping address is required' : ''}
