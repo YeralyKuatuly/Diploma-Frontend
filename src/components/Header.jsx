@@ -143,6 +143,7 @@ const Header = () => {
 
   const authNavItems = [
     { label: 'Add Art', path: '/add-art' },
+    { label: 'My Sales', path: '/artist/selling' },
     { label: 'Profile', path: '/profile' },
     { label: 'Subscriptions', path: '/subscriptions' },
   ];
@@ -337,6 +338,15 @@ const Header = () => {
               >
                 Profile
               </MenuItem>
+              {user?.is_artist && (
+                <MenuItem
+                  component={RouterLink}
+                  to="/artist/selling"
+                  onClick={handleMenuClose}
+                >
+                  My Sales
+                </MenuItem>
+              )}
               <MenuItem
                 component={RouterLink}
                 to="/subscriptions"

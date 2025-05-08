@@ -24,6 +24,7 @@ import Order from './components/Order';
 import Orders from './pages/Orders';
 import './styles/base.css';
 import OrderDetail from './pages/OrderDetail';
+import ArtistSelling from './pages/ArtistSelling';
 
 // Paths where header and footer should be hidden
 const hiddenComponentPaths = ['/slideshow'];
@@ -100,7 +101,22 @@ const AppContent = () => {
                             </PrivateRoute>
                         } 
                     />
-                    <Route path="/orders/:id" element={<OrderDetail />} />
+                    <Route 
+                        path="/orders/:id" 
+                        element={
+                            <PrivateRoute>
+                                <OrderDetail />
+                            </PrivateRoute>
+                        } 
+                    />
+                    <Route 
+                        path="/artist/selling" 
+                        element={
+                            <PrivateRoute>
+                                <ArtistSelling />
+                            </PrivateRoute>
+                        } 
+                    />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
                 </Routes>
