@@ -60,8 +60,10 @@ const ArtistSelling = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        console.log('Fetching artist orders...');
         setLoading(true);
         const data = await getArtistOrders(filters);
+        console.log('Received orders data:', data);
         setOrders(data);
       } catch (err) {
         console.error('Error fetching artist orders:', err);
@@ -114,6 +116,7 @@ const ArtistSelling = () => {
   };
 
   if (loading && !orders.length) {
+    console.log('Rendering loading state...');
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
         <CircularProgress />
@@ -123,13 +126,18 @@ const ArtistSelling = () => {
   }
 
   if (error) {
+    console.log('Rendering error state:', error);
     return (
       <Box display="flex" flexDirection="column" alignItems="center" minHeight="60vh" p={3}>
         <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+        <Button variant="contained" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
       </Box>
     );
   }
 
+  console.log('Rendering main content with orders:', orders);
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
       <Typography variant="h4" gutterBottom>

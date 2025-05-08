@@ -616,8 +616,15 @@ export const getArtistOrders = async (filters = {}) => {
     const queryString = queryParams.toString();
     const url = `/orders/artist-orders/${queryString ? `?${queryString}` : ''}`;
     
+    console.log("Making request to URL:", url);
     const response = await getAuthAxios().get(url);
     console.log("Artist orders response:", response.data);
+    
+    if (!response.data) {
+      console.warn("No data received from the server");
+      return [];
+    }
+    
     return response.data;
   } catch (error) {
     console.error("Error fetching artist orders:", error);
