@@ -163,8 +163,9 @@ const ArtistOrders = () => {
                 <TableCell>Customer</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Amount</TableCell>
+                <TableCell>Payment Status</TableCell>
+                <TableCell>Delivery Info</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Delivery Status</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -174,14 +175,35 @@ const ArtistOrders = () => {
                   <TableCell>{order.id}</TableCell>
                   <TableCell>{new Date(order.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>Customer #{order.user.id}</TableCell>
-                  <TableCell>{order.order_type === 'pickup' ? 'Self Pickup' : 'Delivery'}</TableCell>
-                  <TableCell>${order.total_amount}</TableCell>
                   <TableCell>
                     <Chip
-                      label={order.status.toUpperCase()}
-                      color={STATUS_COLORS[order.status] || 'default'}
+                      label={order.order_type === 'pickup' ? 'Self Pickup' : 'Delivery'}
+                      color={order.order_type === 'pickup' ? 'info' : 'primary'}
                       size="small"
                     />
+                  </TableCell>
+                  <TableCell>${order.total_amount}</TableCell>
+                  <TableCell>
+                    {order.kaspi_payments?.map((payment, index) => (
+                      <Chip
+                        key={index}
+                        label={payment.status.toUpperCase()}
+                        color={payment.status === 'completed' ? 'success' : 'warning'}
+                        size="small"
+                        sx={{ mr: 0.5 }}
+                      />
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {order.order_type === 'pickup' ? (
+                      <Typography variant="body2">
+                        {order.pickup_location || 'Location not set'}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2">
+                        {order.shipping_address}
+                      </Typography>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Chip

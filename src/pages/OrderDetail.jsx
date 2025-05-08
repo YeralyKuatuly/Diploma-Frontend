@@ -334,31 +334,72 @@ const OrderDetail = () => {
               <Divider sx={{ my: 2 }} />
               
               <Typography variant="subtitle1" gutterBottom>
-                Order Type: {order.order_type === 'pickup' ? 'Self Pickup' : 'Delivery'}
+                Order Date: {new Date(order.created_at).toLocaleString()}
               </Typography>
+              
+              {/* Delivery Information Section */}
+              <Card sx={{ mt: 3, mb: 3 }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Delivery Information
+                  </Typography>
+                  
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle1">
+                        Order Type: {order.order_type === 'pickup' ? 'Self Pickup' : 'Delivery'}
+                      </Typography>
+                    </Grid>
+                    
+                    {order.order_type === 'pickup' ? (
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">
+                          Pickup Location: {order.pickup_location || 'Not set yet'}
+                        </Typography>
+                        {!order.pickup_location && isArtist && (
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => openDialog('pickup')}
+                            sx={{ mt: 1 }}
+                          >
+                            Set Pickup Location
+                          </Button>
+                        )}
+                      </Grid>
+                    ) : (
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1">
+                          Shipping Address: {order.shipping_address}
+                        </Typography>
+                      </Grid>
+                    )}
+                    
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle1">
+                        Delivery Status: {DELIVERY_STATUS[order.delivery_status]}
+                      </Typography>
+                      {isArtist && (
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => openDialog('delivery')}
+                          sx={{ mt: 1 }}
+                        >
+                          Update Status
+                        </Button>
+                      )}
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
               
               <Typography variant="subtitle1" gutterBottom>
                 Payment Method: {order.payment_method === 'kaspi' ? 'Kaspi Pay' : 'Cash'}
               </Typography>
               
-              {order.order_type === 'delivery' && order.shipping_address && (
-                <Typography variant="subtitle1" gutterBottom>
-                  Shipping Address: {order.shipping_address}
-                </Typography>
-              )}
-              
-              {order.order_type === 'pickup' && order.pickup_location && (
-                <Typography variant="subtitle1" gutterBottom>
-                  Pickup Location: {order.pickup_location}
-                </Typography>
-              )}
-              
               <Typography variant="subtitle1" gutterBottom>
                 Total Amount: ${order.total_amount}
-              </Typography>
-              
-              <Typography variant="subtitle1" gutterBottom>
-                Order Date: {new Date(order.created_at).toLocaleString()}
               </Typography>
               
               {/* Artist Actions */}
