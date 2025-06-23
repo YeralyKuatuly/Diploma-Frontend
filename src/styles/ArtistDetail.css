@@ -1,11 +1,13 @@
 :root {
   --metallic-primary: #000000;  /* Black */
   --metallic-secondary: #666666;  /* Dark Gray */
-  --metallic-accent: #8697C4;  /* Cool Slate */
-  --metallic-light: #ADBBDA;  /* Muted Silver */
-  --metallic-background: #EDE8F5;  /* Platinum Mist */
-  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
-  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+  --metallic-accent: #D9D9D9;  /* Light Gray */
+  --metallic-light: #F5F5F5;  /* Very Light Gray */
+  --metallic-background: #ffffff;  /* White */
+  --metallic-text-dark: #000000;  /* Black */
+  --metallic-text-light: #ffffff;  /* White */
+  --metallic-error: #888888;  /* Medium Gray for errors */
+  --metallic-success: #444444;  /* Slightly lighter than black for success */
 }
 
 /* 🌟 Artist Detail Container */
@@ -231,11 +233,11 @@
 }
 
 .subscribe-button.subscribed {
-  background: linear-gradient(135deg, var(--metallic-accent), var(--metallic-accent-dark));
+  background: linear-gradient(135deg, var(--metallic-accent), var(--metallic-light));
 }
 
 .subscribe-button.subscribed:hover {
-  background: linear-gradient(135deg, var(--metallic-accent-dark), var(--metallic-accent));
+  background: linear-gradient(135deg, var(--metallic-light), var(--metallic-accent));
 }
 
 .subscribe-button:disabled {

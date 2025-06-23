@@ -1,12 +1,13 @@
 :root {
   --metallic-primary: #000000;      /* Black */
   --metallic-secondary: #666666;    /* Dark Gray */
-  --metallic-accent: #D4AF37;       /* Warm Gold */
-  --metallic-light: #ADBBDA;        /* Muted Silver */
-  --metallic-background: #F0EDF7;   /* Warmer Platinum */
-  --metallic-text-dark: #1A1A3A;    /* Darker Text */
-  --metallic-text-light: #FFFFFF;   /* White */
-  --metallic-error: #E74C3C;        /* Error Red */
+  --metallic-accent: #D9D9D9;      /* Light Gray */
+  --metallic-light: #F5F5F5;       /* Very Light Gray */
+  --metallic-background: #ffffff;   /* White */
+  --metallic-text-dark: #000000;    /* Black */
+  --metallic-text-light: #ffffff;   /* White */
+  --metallic-error: #888888;        /* Medium Gray for errors */
+  --metallic-success: #444444;      /* Slightly lighter than black for success */
   
   /* Additional Colors */
   --metallic-primary-dark: #2A3B7A; /* Darker shade for hover */
@@ -108,7 +109,7 @@
 
 .subscription-card {
   display: flex;
-  background: linear-gradient(135deg, var(--metallic-background), white);
+  background: linear-gradient(135deg, var(--metallic-secondary), var(--metallic-primary));
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -151,7 +152,7 @@
 
 .artist-name {
   margin: 0 0 0.5rem;
-  color: var(--metallic-primary);
+  color: var(--metallic-text-light);
   font-size: 1.2rem;
   font-weight: 700;
 }
@@ -185,14 +186,14 @@
 }
 
 .view-profile-button {
-  background: linear-gradient(135deg, var(--metallic-secondary), var(--metallic-primary));
-  color: var(--metallic-text-light);
+  background: linear-gradient(135deg, var(--metallic-accent), var(--metallic-light));
+  color: var(--metallic-text-dark);
   border: none;
 }
 
 .unsubscribe-button {
-  background: linear-gradient(135deg, var(--metallic-accent), var(--metallic-accent-dark));
-  color: var(--metallic-text-light);
+  background: linear-gradient(135deg, var(--metallic-accent), var(--metallic-light));
+  color: var(--metallic-text-dark);
   border: none;
 }
 
