@@ -1,30 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
-import Gallery from "./pages/Gallery";
-import Artists from "./pages/Artists";
-import AddArt from "./pages/AddArt";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import ArtworkDetail from "./pages/ArtworkDetail";
-import ArtistDetail from "./pages/ArtistDetail";
-import Profile from "./pages/Profile";
-import Subscriptions from "./pages/Subscriptions";
-import ArtSlideshow from "./pages/ArtSlideshow";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
 import NotificationProvider from "./context/NotificationContext";
-import "./App.css"; // Make sure to import the CSS
-import EditArtwork from "./pages/EditArtwork";
+import "./App.css";
 import PrivateRoute from "./components/PrivateRoute";
-import Cart from './components/Cart';
-import Order from './components/Order';
-import Orders from './pages/Orders';
 import './styles/base.css';
-import OrderDetail from './pages/OrderDetail';
-import ArtistSelling from './pages/ArtistSelling';
+import './styles/loading.css';
+
+// Lazy load components
+const Gallery = lazy(() => import("./pages/Gallery"));
+const Artists = lazy(() => import("./pages/Artists"));
+const AddArt = lazy(() => import("./pages/AddArt"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ArtworkDetail = lazy(() => import("./pages/ArtworkDetail"));
+const ArtistDetail = lazy(() => import("./pages/ArtistDetail"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Subscriptions = lazy(() => import("./pages/Subscriptions"));
+const ArtSlideshow = lazy(() => import("./pages/ArtSlideshow"));
+const EditArtwork = lazy(() => import("./pages/EditArtwork"));
+const Cart = lazy(() => import('./components/Cart'));
+const Order = lazy(() => import('./components/Order'));
+const Orders = lazy(() => import('./pages/Orders'));
+const OrderDetail = lazy(() => import('./pages/OrderDetail'));
+const ArtistSelling = lazy(() => import('./pages/ArtistSelling'));
+
+// Loading component
+const LoadingFallback = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '100vh',
+    flexDirection: 'column',
+    gap: '1rem'
+  }}>
+    <div className="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
 
 // Paths where header and footer should be hidden
 const hiddenComponentPaths = ['/slideshow'];
@@ -57,69 +75,71 @@ const AppContent = () => {
         <div className="app-container">
             <HeaderWrapper />
             <main>
-                <Routes>
-                    <Route path="/" element={<Gallery />} />
-                    <Route path="/gallery" element={<Gallery />} />
-                    <Route path="/artworks" element={<Gallery />} />
-                    <Route path="/artists" element={<Artists />} />
-                    <Route path="/artist/:id" element={<ArtistDetail />} />
-                    <Route path="/add-art" element={<AddArt />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/artwork/:id" element={<ArtworkDetail />} />
-                    <Route path="/slideshow" element={<ArtSlideshow />} />
-                    <Route 
-                        path="/artwork/:id/edit" 
-                        element={
-                            <PrivateRoute>
-                                <EditArtwork />
-                            </PrivateRoute>
-                        } 
-                    />
-                    <Route 
-                        path="/profile" 
-                        element={
-                            <PrivateRoute>
-                                <Profile />
-                            </PrivateRoute>
-                        } 
-                    />
-                    <Route 
-                        path="/subscriptions" 
-                        element={
-                            <PrivateRoute>
-                                <Subscriptions />
-                            </PrivateRoute>
-                        } 
-                    />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route 
-                        path="/orders"
-                        element={
-                            <PrivateRoute>
-                                <Orders />
-                            </PrivateRoute>
-                        } 
-                    />
-                    <Route 
-                        path="/orders/:id" 
-                        element={
-                            <PrivateRoute>
-                                <OrderDetail />
-                            </PrivateRoute>
-                        } 
-                    />
-                    <Route 
-                        path="/artist/selling" 
-                        element={
-                            <PrivateRoute>
-                                <ArtistSelling />
-                            </PrivateRoute>
-                        } 
-                    />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
-                </Routes>
+                <Suspense fallback={<LoadingFallback />}>
+                    <Routes>
+                        <Route path="/" element={<Gallery />} />
+                        <Route path="/gallery" element={<Gallery />} />
+                        <Route path="/artworks" element={<Gallery />} />
+                        <Route path="/artists" element={<Artists />} />
+                        <Route path="/artist/:id" element={<ArtistDetail />} />
+                        <Route path="/add-art" element={<AddArt />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/artwork/:id" element={<ArtworkDetail />} />
+                        <Route path="/slideshow" element={<ArtSlideshow />} />
+                        <Route 
+                            path="/artwork/:id/edit" 
+                            element={
+                                <PrivateRoute>
+                                    <EditArtwork />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/profile" 
+                            element={
+                                <PrivateRoute>
+                                    <Profile />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/subscriptions" 
+                            element={
+                                <PrivateRoute>
+                                    <Subscriptions />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route 
+                            path="/orders"
+                            element={
+                                <PrivateRoute>
+                                    <Orders />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/orders/:id" 
+                            element={
+                                <PrivateRoute>
+                                    <OrderDetail />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/artist/selling" 
+                            element={
+                                <PrivateRoute>
+                                    <ArtistSelling />
+                                </PrivateRoute>
+                            } 
+                        />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+                    </Routes>
+                </Suspense>
             </main>
             <FooterWrapper />
         </div>
@@ -128,7 +148,6 @@ const AppContent = () => {
 
 function App() {
     useEffect(() => {
-        // Debug log to check if component is mounting
         console.log("App component mounted");
     }, []);
 
