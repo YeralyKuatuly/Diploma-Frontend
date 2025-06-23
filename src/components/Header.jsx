@@ -217,7 +217,7 @@ const Header = () => {
   );
 
   return (
-    <AppBar position="static" className="header">
+    <AppBar position="static" className="header" color="default" sx={{ backgroundColor: '#000', color: '#fff' }}>
       <Toolbar>
         <Typography
           variant="h6"
