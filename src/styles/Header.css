@@ -84,7 +84,7 @@
 }
 
 .nav-links a:hover, .nav-links button:hover {
-    color: var(--metallic-secondary) !important; /* Soft Blue, !important to override MUI styles */
+    color: var(--metallic-secondary) !important; /* Dark Gray, !important to override MUI styles */
     text-decoration: underline;
 }
 
@@ -114,7 +114,7 @@
 }
 
 .search-box button:hover {
-    background-color: var(--metallic-primary); /* Deep Royal Blue */
+    background-color: var(--metallic-primary); /* Black */
 }
 
 .menu-button {
