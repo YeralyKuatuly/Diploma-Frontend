@@ -115,6 +115,37 @@ const ArtistSelling = () => {
     navigate(`/orders/${orderId}`);
   };
 
+  // Add a function to safely get user info
+  const getUserInfo = (order) => {
+    if (!order || !order.user) return 'Unknown Customer';
+    return order.user.username || `Customer #${order.user.id}`;
+  };
+
+  // Add a function to safely get payment status
+  const getPaymentStatus = (order) => {
+    if (!order || !order.kaspi_payments || !order.kaspi_payments.length) {
+      return <Chip label="No Payment" color="warning" size="small" />;
+    }
+    return order.kaspi_payments.map((payment, index) => (
+      <Chip
+        key={index}
+        label={payment.status.toUpperCase()}
+        color={payment.status === 'completed' ? 'success' : 'warning'}
+        size="small"
+        sx={{ mr: 0.5 }}
+      />
+    ));
+  };
+
+  // Add a function to safely get delivery info
+  const getDeliveryInfo = (order) => {
+    if (!order) return 'No delivery info';
+    if (order.order_type === 'pickup') {
+      return order.pickup_location || 'Location not set';
+    }
+    return order.shipping_address || 'No shipping address';
+  };
+
   if (loading && !orders.length) {
     console.log('Rendering loading state...');
     return (
@@ -221,8 +252,10 @@ const ArtistSelling = () => {
               {orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>{order.id}</TableCell>
-                  <TableCell>{new Date(order.created_at).toLocaleDateString()}</TableCell>
-                  <TableCell>Customer #{order.user.id}</TableCell>
+                  <TableCell>
+                    {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}
+                  </TableCell>
+                  <TableCell>{getUserInfo(order)}</TableCell>
                   <TableCell>
                     <Chip
                       label={order.order_type === 'pickup' ? 'Self Pickup' : 'Delivery'}
@@ -230,28 +263,12 @@ const ArtistSelling = () => {
                       size="small"
                     />
                   </TableCell>
-                  <TableCell>${order.total_amount}</TableCell>
+                  <TableCell>${order.total_amount || 0}</TableCell>
+                  <TableCell>{getPaymentStatus(order)}</TableCell>
                   <TableCell>
-                    {order.kaspi_payments?.map((payment, index) => (
-                      <Chip
-                        key={index}
-                        label={payment.status.toUpperCase()}
-                        color={payment.status === 'completed' ? 'success' : 'warning'}
-                        size="small"
-                        sx={{ mr: 0.5 }}
-                      />
-                    ))}
-                  </TableCell>
-                  <TableCell>
-                    {order.order_type === 'pickup' ? (
-                      <Typography variant="body2">
-                        {order.pickup_location || 'Location not set'}
-                      </Typography>
-                    ) : (
-                      <Typography variant="body2">
-                        {order.shipping_address}
-                      </Typography>
-                    )}
+                    <Typography variant="body2">
+                      {getDeliveryInfo(order)}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <Chip
