@@ -2,13 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --metallic-primary: #000000;  /* Black */
-  --metallic-secondary: #666666;  /* Dark Gray */
-  --metallic-accent: #8697C4;  /* Cool Slate */
-  --metallic-light: #ADBBDA;  /* Muted Silver */
-  --metallic-background: #EDE8F5;  /* Platinum Mist */
-  --metallic-text-dark: #2C2C54;  /* Dark Text for contrast */
-  --metallic-text-light: #FFFFFF;  /* Light Text for buttons */
+  --metallic-primary: #000000;      /* Black */
+  --metallic-secondary: #666666;    /* Dark Gray */
+  --metallic-accent: #D9D9D9;      /* Light Gray */
+  --metallic-light: #F5F5F5;       /* Very Light Gray */
+  --metallic-background: #ffffff;   /* White */
+  --metallic-text-dark: #000000;    /* Black */
+  --metallic-text-light: #ffffff;   /* White */
+  --metallic-error: #888888;        /* Medium Gray for errors */
+  --metallic-success: #444444;      /* Slightly lighter than black for success */
 
   /* Dark Mode */
   --metallic-dark-bg: #1A1A2E;  /* Midnight Navy */
@@ -44,13 +46,13 @@ html, body {
 }
 
 /* 🌟 Links */
-a {
+a, .price {
   font-weight: 600;
   color: var(--metallic-primary);
   text-decoration: inherit;
 }
 
-a:hover {
+a:hover, .price:hover {
   color: var(--metallic-secondary);
 }
 
@@ -111,11 +113,11 @@ button:focus-visible {
     background-color: var(--metallic-dark-bg);
   }
 
-  a {
+  a, .price {
     color: var(--metallic-light);
   }
 
-  a:hover {
+  a:hover, .price:hover {
     color: var(--metallic-primary);
   }
 
